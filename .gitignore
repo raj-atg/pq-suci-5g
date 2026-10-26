@@ -13,3 +13,4 @@ runtime/
 results/raw/**/*.pcap
 results/raw/**/*.pcapng
 !results/raw/pcap_samples/*.pcap
+config/export.env

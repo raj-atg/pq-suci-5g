@@ -4,7 +4,7 @@ supi: 'imsi-999700000000001'
 mcc: '999'
 mnc: '70'
 protectionScheme: 0
-homeNetworkPublicKey: ''
+homeNetworkPublicKey: 'ea85672bc2b759b54c1dccf82ca2cf798b5f272856032735f4731a82c187770c'
 homeNetworkPublicKeyId: 0
 routingIndicator: '0000'
 key: '465B5CE8B199B49FAA5F0A2EE238A6BC'

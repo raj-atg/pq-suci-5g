@@ -54,3 +54,26 @@ Short entries: context, decision, reason.
   `\\wsl.localhost\Ubuntu\home\raj\pq-suci-5g`. Only figures, captions and RESULTS.md are
   copied to the approved Documents folder (D2).
 - Reason: builds on `/mnt/c` are slow, and copying would create a second, stale version.
+
+## D10. /etc/iproute2/rt_tables (user decision)
+- Context: UERANSIM v3.3.0 opens and appends to `/etc/iproute2/rt_tables`
+  (`src/ue/tun/config.cpp:288,327`). Ubuntu 26.04 ships this file only as
+  `/usr/share/iproute2/rt_tables`, so the UE TUN setup failed.
+- Decision (asked the user): create `/etc/iproute2/` with a copy of the distro default file.
+- Undo: `sudo rm -r /etc/iproute2` (UERANSIM may have appended a `uesimtun` table line to it).
+
+## D11. Windows copy of the repository (user request, replaces D2 and D9)
+- Context: the user cannot navigate to `\\wsl.localhost\...` and wants the files in
+  `<Windows Documents folder>`.
+- Decision: the working repository stays in the Linux filesystem (fast builds, Linux
+  permissions for scripts and hooks). `scripts/sync_to_windows.sh` copies all repository files
+  (not builds, not the venv) to the folder in `config/export.env` (not committed); a git
+  `post-commit` hook runs it after every commit. `make export-figures` runs the same sync, so
+  figures and RESULTS.md land in that folder. Copy only, nothing is ever deleted there.
+- The script does nothing on plain Linux or without `config/export.env`, so the project runs
+  the same on any Ubuntu machine.
+
+## D12. Documentation style (user request)
+- Decision: document this as a general project, not a case study: plain, matter-of-fact
+  tone; what it is, what it is used for, why, and how to install and run it, on native
+  Ubuntu and on WSL2.
