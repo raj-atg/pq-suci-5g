@@ -28,7 +28,7 @@ Short entries: context, decision, reason.
 
 ## D6. Git identity
 - Context: no global git identity was configured.
-- Decision: repo-local `user.name=raj`, `user.email` = the account email. Hooks enabled with
+- Decision: repo-local identity set to the GitHub no-reply address (the repository is public). Hooks enabled with
   `git config core.hooksPath scripts/hooks`.
 
 ## D7. Subagents and hooks created mid-session

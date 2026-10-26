@@ -1,6 +1,6 @@
 # pq-suci-5g: project conventions
 
-Research prototype: post-quantum (ML-KEM) SUCI on Open5GS + UERANSIM. See TASK.md and docs/.
+Research prototype: post-quantum (ML-KEM) SUCI on Open5GS + UERANSIM. See README.md and docs/.
 
 ## Hard rules
 - NO EM DASHES (U+2014) anywhere: code, comments, docs, commit messages, plot labels, file names.

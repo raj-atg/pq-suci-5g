@@ -73,7 +73,7 @@ src/pqsuci/       crypto package: KDF, ECIES, ML-KEM scheme, SUCI format, CLI
 patches/          patches for Open5GS v2.8.0 and UERANSIM v3.3.0
 config/open5gs/   Open5GS network function configs
 config/ueransim/  gNB and UE configs
-config/keys/      TEST ONLY home network keys
+config/keys/      TEST ONLY home network keys, generated locally by `make keys` (not committed)
 scripts/          setup, build, start/stop core, subscribers, helpers
 experiments/      experiment runners and the registration script
 bench/            microbenchmarks
