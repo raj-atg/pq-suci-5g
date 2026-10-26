@@ -47,3 +47,10 @@ Short entries: context, decision, reason.
   UERANSIM by our own patch (OpenSSL P-256), kept in `patches/` next to scheme 12, then used for
   the interop check, E3 and E4.
 - Reason: keeps Profile B as a real-core baseline while making clear it relies on our patch.
+
+## D9. Viewing files from Windows
+- Context: the user wants to see the repo in Windows File Explorer.
+- Decision: no copy. The repo stays in the Linux filesystem and Windows reads it live at
+  `\\wsl.localhost\Ubuntu\home\raj\pq-suci-5g`. Only figures, captions and RESULTS.md are
+  copied to the approved Documents folder (D2).
+- Reason: builds on `/mnt/c` are slow, and copying would create a second, stale version.

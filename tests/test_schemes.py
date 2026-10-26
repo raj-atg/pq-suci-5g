@@ -125,3 +125,19 @@ def test_null_scheme_suci_string() -> None:
     suci = conceal_imsi(SCHEMES["null"], b"", "999700000000001", mnc_len=2)
     assert suci.to_string() == "suci-0-999-70-0000-0-0-0000000001"
     assert deconceal_suci(suci, b"") == "999700000000001"
+
+
+def test_scheme_by_id_rejects_negative() -> None:
+    """Benchmark-only schemes have no protection scheme id."""
+    with pytest.raises(KeyError):
+        scheme_by_id(-1)
+
+
+@pytest.mark.parametrize("name", ["mlkem768", "hybrid"])
+def test_wrong_length_secret_key_raises_deconceal_error(name: str) -> None:
+    """A secret key of the wrong length fails cleanly instead of crashing in ctypes."""
+    scheme = SCHEMES[name]
+    _priv, pub = scheme.keygen()
+    out = scheme.conceal(pub, b"\x00\x00\x00\x00\x10")
+    with pytest.raises(DeconcealError):
+        scheme.deconceal(b"\x01" * 100, out)

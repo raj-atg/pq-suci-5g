@@ -56,9 +56,7 @@ def _p256_private_from_bytes(raw: bytes) -> ec.EllipticCurvePrivateKey:
 
 
 def _p256_compressed(pub: ec.EllipticCurvePublicKey) -> bytes:
-    return pub.public_bytes(
-        serialization.Encoding.X962, serialization.PublicFormat.CompressedPoint
-    )
+    return pub.public_bytes(serialization.Encoding.X962, serialization.PublicFormat.CompressedPoint)
 
 
 def profile_b_keygen() -> tuple[bytes, bytes]:

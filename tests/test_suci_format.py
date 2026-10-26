@@ -12,7 +12,6 @@ from pqsuci.suci_format import Suci, bcd_to_msin, msin_to_bcd, parse_suci
         ("123", bytes.fromhex("21f3")),
         ("12", bytes.fromhex("21")),
         ("1", bytes.fromhex("f1")),
-        ("", b""),
     ],
 )
 def test_bcd_known_values(msin: str, bcd: bytes) -> None:
@@ -25,7 +24,7 @@ def test_bcd_round_trip(msin: str) -> None:
     assert bcd_to_msin(msin_to_bcd(msin)) == msin
 
 
-@pytest.mark.parametrize("bad", ["12a", "1 2", "-1", "1.5"])
+@pytest.mark.parametrize("bad", ["", "12a", "1 2", "-1", "1.5"])
 def test_msin_to_bcd_rejects_non_digits(bad: str) -> None:
     with pytest.raises(ValueError):
         msin_to_bcd(bad)
@@ -58,7 +57,9 @@ def test_parse_strips_whitespace() -> None:
     assert parse_suci("  suci-0-999-70-0000-0-0-0000000001\n").mnc == "70"
 
 
-@pytest.mark.parametrize(("text", "mnc"), [("suci-0-310-260-0-1-1-ab", "260"), ("suci-0-310-26-0-1-1-ab", "26")])
+@pytest.mark.parametrize(
+    ("text", "mnc"), [("suci-0-310-260-0-1-1-ab", "260"), ("suci-0-310-26-0-1-1-ab", "26")]
+)
 def test_two_and_three_digit_mnc(text: str, mnc: str) -> None:
     assert parse_suci(text).mnc == mnc
 

@@ -1,0 +1,203 @@
+diff --git a/src/ue.cpp b/src/ue.cpp
+index d9e3f85..addcb45 100644
+--- a/src/ue.cpp
++++ b/src/ue.cpp
+@@ -155,7 +155,7 @@ static nr::ue::UeConfig *ReadConfigYaml()
+     if (yaml::HasField(config, "homeNetworkPublicKeyId"))
+         result->homeNetworkPublicKeyId = yaml::GetInt32(config, "homeNetworkPublicKeyId", 0, 255);
+     if (yaml::HasField(config, "homeNetworkPublicKey"))        
+-        result->homeNetworkPublicKey = OctetString::FromHex(yaml::GetString(config, "homeNetworkPublicKey", 64, 64)); 
++        result->homeNetworkPublicKey = OctetString::FromHex(yaml::GetString(config, "homeNetworkPublicKey", 64, 8192)); // pq-suci-5g: was 64..64 
+     if (yaml::HasField(config, "imei"))
+         result->imei = yaml::GetString(config, "imei", 15, 15);
+     if (yaml::HasField(config, "imeiSv"))
+diff --git a/src/ue/CMakeLists.txt b/src/ue/CMakeLists.txt
+index 8375939..ed0f758 100644
+--- a/src/ue/CMakeLists.txt
++++ b/src/ue/CMakeLists.txt
+@@ -5,3 +5,9 @@ add_library(ue ${HDR_FILES} ${SRC_FILES})
+ 
+ target_compile_options(ue PRIVATE -Wall -Wextra -pedantic -Wno-unused-parameter)
+ target_link_libraries(ue common-lib)
++
++# pq-suci-5g: Profile B (OpenSSL P-256) and scheme 12 (liboqs ML-KEM-768)
++find_package(OpenSSL REQUIRED)
++find_package(PkgConfig REQUIRED)
++pkg_check_modules(OQS REQUIRED IMPORTED_TARGET liboqs)
++target_link_libraries(ue OpenSSL::Crypto PkgConfig::OQS)
+diff --git a/src/ue/nas/mm/identity.cpp b/src/ue/nas/mm/identity.cpp
+index bf04c67..20579ff 100644
+--- a/src/ue/nas/mm/identity.cpp
++++ b/src/ue/nas/mm/identity.cpp
+@@ -12,6 +12,55 @@
+ // STEPHANE
+ #include <iostream>
+ 
++// pq-suci-5g: Profile B and post-quantum scheme 12 (research prototype)
++#include <chrono>
++#include <openssl/core_names.h>
++#include <openssl/evp.h>
++#include <openssl/hmac.h>
++#include <openssl/params.h>
++#include <oqs/oqs.h>
++
++namespace
++{
++
++// TS 33.501 Annex C DEM: X9.63 KDF (SHA-256, 64 bytes) with any-length Z and SharedInfo,
++// then AES-128-CTR and HMAC-SHA-256 truncated to 64 bits. Returns ciphertext || tag,
++// or an empty string on error.
++OctetString SuciDem(const uint8_t *z, size_t zLen, const uint8_t *info, size_t infoLen,
++                    const OctetString &plain)
++{
++    uint8_t k[64];
++    for (uint32_t i = 0; i < 2; i++)
++    {
++        uint8_t counter[4] = {0, 0, 0, static_cast<uint8_t>(i + 1)};
++        EVP_MD_CTX *md = EVP_MD_CTX_new();
++        unsigned int len = 0;
++        EVP_DigestInit_ex(md, EVP_sha256(), nullptr);
++        EVP_DigestUpdate(md, z, zLen);
++        EVP_DigestUpdate(md, counter, sizeof(counter));
++        EVP_DigestUpdate(md, info, infoLen);
++        EVP_DigestFinal_ex(md, k + 32 * i, &len);
++        EVP_MD_CTX_free(md);
++    }
++
++    std::vector<uint8_t> ct(plain.length());
++    int outLen = 0;
++    EVP_CIPHER_CTX *c = EVP_CIPHER_CTX_new();
++    EVP_EncryptInit_ex(c, EVP_aes_128_ctr(), nullptr, k, k + 16);
++    EVP_EncryptUpdate(c, ct.data(), &outLen, plain.data(), plain.length());
++    EVP_CIPHER_CTX_free(c);
++
++    uint8_t mac[32];
++    unsigned int macLen = 0;
++    HMAC(EVP_sha256(), k + 32, 32, ct.data(), ct.size(), mac, &macLen);
++
++    OctetString out = OctetString::FromArray(ct.data(), ct.size());
++    out.append(OctetString::FromArray(mac, 8));
++    return out;
++}
++
++} // namespace
++
+ namespace nr::ue
+ {
+ 
+@@ -114,7 +163,29 @@ nas::IE5gsMobileIdentity NasMm::generateSuci()
+     {
+         ret.imsi.protectionSchemaId = 1;
+         ret.imsi.homeNetworkPublicKeyIdentifier = homeNetworkPublicKeyId;
++        auto t0 = std::chrono::steady_clock::now(); // pq-suci-5g: timing log
+         ret.imsi.schemeOutput = generateSUCIProfileA(imsi.substr(plmn.isLongMnc ? 6 : 5), homeNetworkPublicKey);
++        auto us = std::chrono::duration<double, std::micro>(std::chrono::steady_clock::now() - t0).count();
++        m_logger->info("[SUCI] scheme=1 output_bytes=%d conceal_us=%.1f", (int)ret.imsi.schemeOutput.size() / 2, us);
++        return ret;
++    }
++    else if (protectionScheme == 2 || protectionScheme == 12)
++    {
++        // pq-suci-5g: Profile B (OpenSSL) and scheme 12, ML-KEM-768 (liboqs, research prototype)
++        auto msin = imsi.substr(plmn.isLongMnc ? 6 : 5);
++        auto t0 = std::chrono::steady_clock::now();
++        ret.imsi.protectionSchemaId = protectionScheme;
++        ret.imsi.homeNetworkPublicKeyIdentifier = homeNetworkPublicKeyId;
++        ret.imsi.schemeOutput = protectionScheme == 2 ? generateSUCIProfileB(msin, homeNetworkPublicKey)
++                                                      : generateSUCIPqMlkem768(msin, homeNetworkPublicKey);
++        auto us = std::chrono::duration<double, std::micro>(std::chrono::steady_clock::now() - t0).count();
++        if (ret.imsi.schemeOutput.empty())
++        {
++            m_logger->err("SUCI generation failed for protection scheme %d", protectionScheme);
++            return {};
++        }
++        m_logger->info("[SUCI] scheme=%d output_bytes=%d conceal_us=%.1f", protectionScheme,
++                       (int)ret.imsi.schemeOutput.size() / 2, us);
+         return ret;
+     }
+     else
+@@ -124,6 +195,72 @@ nas::IE5gsMobileIdentity NasMm::generateSuci()
+     }
+ }
+ 
++std::string NasMm::generateSUCIProfileB(const std::string &msinDigits, const OctetString &hnPublicKey)
++{
++    if (hnPublicKey.length() != 33)
++    {
++        m_logger->err("Profile B needs a 33-byte compressed home network public key");
++        return {};
++    }
++    std::string out;
++    EVP_PKEY *eph = EVP_EC_gen("P-256");
++    EVP_PKEY *peer = nullptr;
++    EVP_PKEY_CTX *pctx = EVP_PKEY_CTX_new_from_name(nullptr, "EC", nullptr);
++    EVP_PKEY_CTX *dctx = nullptr;
++    char group[] = "prime256v1";
++    OSSL_PARAM params[] = {
++        OSSL_PARAM_construct_utf8_string(OSSL_PKEY_PARAM_GROUP_NAME, group, 0),
++        OSSL_PARAM_construct_octet_string(OSSL_PKEY_PARAM_PUB_KEY, const_cast<uint8_t *>(hnPublicKey.data()),
++                                          hnPublicKey.length()),
++        OSSL_PARAM_construct_end()};
++    uint8_t ephPub[33], z[32];
++    size_t ephPubLen = 0, zLen = sizeof(z);
++
++    if (eph && pctx && EVP_PKEY_fromdata_init(pctx) == 1 &&
++        EVP_PKEY_fromdata(pctx, &peer, EVP_PKEY_PUBLIC_KEY, params) == 1 &&
++        EVP_PKEY_set_utf8_string_param(eph, OSSL_PKEY_PARAM_EC_POINT_CONVERSION_FORMAT, "compressed") == 1 &&
++        EVP_PKEY_get_octet_string_param(eph, OSSL_PKEY_PARAM_ENCODED_PUBLIC_KEY, ephPub, sizeof(ephPub),
++                                        &ephPubLen) == 1 &&
++        ephPubLen == 33 && (dctx = EVP_PKEY_CTX_new(eph, nullptr)) && EVP_PKEY_derive_init(dctx) == 1 &&
++        EVP_PKEY_derive_set_peer(dctx, peer) == 1 && EVP_PKEY_derive(dctx, z, &zLen) == 1 && zLen == 32)
++    {
++        OctetString msin;
++        nas::EncodeBcdString(msin, msinDigits, ~0, false, 0);
++        OctetString schemeOutput = OctetString::FromArray(ephPub, ephPubLen);
++        schemeOutput.append(SuciDem(z, zLen, ephPub, ephPubLen, msin));
++        out = schemeOutput.toHexString();
++    }
++    EVP_PKEY_CTX_free(dctx);
++    EVP_PKEY_CTX_free(pctx);
++    EVP_PKEY_free(peer);
++    EVP_PKEY_free(eph);
++    return out;
++}
++
++std::string NasMm::generateSUCIPqMlkem768(const std::string &msinDigits, const OctetString &hnPublicKey)
++{
++    OQS_KEM *kem = OQS_KEM_new(OQS_KEM_alg_ml_kem_768);
++    if (!kem || hnPublicKey.length() != (int)kem->length_public_key)
++    {
++        m_logger->err("scheme 12 needs a %d-byte ML-KEM-768 public key", kem ? (int)kem->length_public_key : -1);
++        OQS_KEM_free(kem);
++        return {};
++    }
++    std::vector<uint8_t> ct(kem->length_ciphertext), ss(kem->length_shared_secret);
++    std::string out;
++    if (OQS_KEM_encaps(kem, ct.data(), ss.data(), hnPublicKey.data()) == OQS_SUCCESS)
++    {
++        OctetString msin;
++        nas::EncodeBcdString(msin, msinDigits, ~0, false, 0);
++        OctetString schemeOutput = OctetString::FromArray(ct.data(), ct.size());
++        schemeOutput.append(SuciDem(ss.data(), ss.size(), ct.data(), ct.size(), msin));
++        out = schemeOutput.toHexString();
++    }
++    OQS_MEM_cleanse(ss.data(), ss.size());
++    OQS_KEM_free(kem);
++    return out;
++}
++
+ std::string NasMm::generateSUCIProfileA(const std::string &imsi, const OctetString &hnPublicKey)
+ {
+     std::string name("Seed for x25519 generation");
+diff --git a/src/ue/nas/mm/mm.hpp b/src/ue/nas/mm/mm.hpp
+index a1de095..6c605ea 100644
+--- a/src/ue/nas/mm/mm.hpp
++++ b/src/ue/nas/mm/mm.hpp
+@@ -154,6 +154,8 @@ class NasMm
+     nas::IE5gsMobileIdentity getOrGenerateSuci();
+     nas::IE5gsMobileIdentity generateSuci();
+     std::string generateSUCIProfileA(const std::string &imsi, const OctetString &hnPublicKey);
++    std::string generateSUCIProfileB(const std::string &msin, const OctetString &hnPublicKey);
++    std::string generateSUCIPqMlkem768(const std::string &msin, const OctetString &hnPublicKey);
+     nas::IE5gsMobileIdentity getOrGeneratePreferredId();
+ 
+   private: /* Service */

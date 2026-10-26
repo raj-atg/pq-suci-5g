@@ -17,11 +17,11 @@ from __future__ import annotations
 
 from functools import cache
 
-import oqs
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import x25519
 
 from pqsuci import dem
+from pqsuci._oqs import oqs
 from pqsuci.kdf import derive_session_keys
 
 ML_KEM_ALGS = ("ML-KEM-512", "ML-KEM-768", "ML-KEM-1024")
@@ -60,6 +60,8 @@ def kem_conceal(hn_pub: bytes, plaintext: bytes, alg: str = "ML-KEM-768") -> byt
 def kem_deconceal(hn_priv: bytes, output: bytes, alg: str = "ML-KEM-768") -> bytes:
     """Network side (SIDF): KEM-DEM de-concealment."""
     ct_len = kem_details(alg)["ciphertext"]
+    if len(hn_priv) != kem_details(alg)["secret_key"]:
+        raise dem.DeconcealError(f"{alg} secret key has the wrong length")
     if len(output) < ct_len + dem.MAC_TAG_LEN:
         raise dem.DeconcealError(f"{alg} output too short")
     ct, rest = output[:ct_len], output[ct_len:]
@@ -97,6 +99,8 @@ def hybrid_conceal(hn_pub: bytes, plaintext: bytes, alg: str = "ML-KEM-768") -> 
 def hybrid_deconceal(hn_priv: bytes, output: bytes, alg: str = "ML-KEM-768") -> bytes:
     """Network side (SIDF): hybrid de-concealment. Both secrets are needed."""
     ct_len = kem_details(alg)["ciphertext"]
+    if len(hn_priv) != X25519_LEN + kem_details(alg)["secret_key"]:
+        raise dem.DeconcealError("hybrid secret key has the wrong length")
     if len(output) < X25519_LEN + ct_len + dem.MAC_TAG_LEN:
         raise dem.DeconcealError("hybrid output too short")
     eph_pub = output[:X25519_LEN]

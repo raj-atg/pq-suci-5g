@@ -73,7 +73,9 @@ SCHEMES: dict[str, Scheme] = {
 
 
 def scheme_by_id(scheme_id: int) -> Scheme:
-    """Look up a scheme by its protection scheme identifier."""
+    """Look up a scheme by its protection scheme identifier (benchmark-only schemes have none)."""
+    if scheme_id < 0:
+        raise KeyError(f"invalid protection scheme id {scheme_id}")
     for s in SCHEMES.values():
         if s.scheme_id == scheme_id:
             return s

@@ -1,0 +1,306 @@
+diff --git a/lib/nas/5gs/conv.c b/lib/nas/5gs/conv.c
+index 8208195..2d16d88 100644
+--- a/lib/nas/5gs/conv.c
++++ b/lib/nas/5gs/conv.c
+@@ -96,7 +96,9 @@ char *ogs_nas_5gs_suci_from_mobile_identity(
+         mobile_identity_suci->protection_scheme_id !=
+             OGS_PROTECTION_SCHEME_PROFILE_A &&
+         mobile_identity_suci->protection_scheme_id !=
+-            OGS_PROTECTION_SCHEME_PROFILE_B) {
++            OGS_PROTECTION_SCHEME_PROFILE_B &&
++        mobile_identity_suci->protection_scheme_id !=
++            OGS_PROTECTION_SCHEME_PQ_MLKEM768) {
+         ogs_error("Not supported Protection-Scheme-Id [%d]",
+             mobile_identity_suci->protection_scheme_id);
+         return NULL;
+diff --git a/lib/proto/types.h b/lib/proto/types.h
+index 6214d3e..8fced35 100644
+--- a/lib/proto/types.h
++++ b/lib/proto/types.h
+@@ -302,6 +302,8 @@ ogs_amf_id_t *ogs_amf_id_build(ogs_amf_id_t *amf_id,
+ #define OGS_PROTECTION_SCHEME_NULL 0
+ #define OGS_PROTECTION_SCHEME_PROFILE_A 1
+ #define OGS_PROTECTION_SCHEME_PROFILE_B 2
++/* pq-suci-5g research prototype: home network proprietary range (12..15) */
++#define OGS_PROTECTION_SCHEME_PQ_MLKEM768 12
+ 
+ /************************************
+  * SUPI/GPSI/GUTI                   */
+diff --git a/lib/sbi/context.c b/lib/sbi/context.c
+index 730a5e2..5fe2961 100644
+--- a/lib/sbi/context.c
++++ b/lib/sbi/context.c
+@@ -655,6 +655,35 @@ int ogs_sbi_context_parse_config(
+     return OGS_OK;
+ }
+ 
++/* pq-suci-5g: read a raw binary ML-KEM secret key file into hnet[id] */
++static int load_pq_hnet_key(const char *filename, uint8_t id)
++{
++    FILE *fp = NULL;
++    long size;
++
++    fp = fopen(filename, "rb");
++    if (!fp) {
++        ogs_error("cannot open [%s]", filename);
++        return OGS_ERROR;
++    }
++    if (fseek(fp, 0, SEEK_END) != 0 || (size = ftell(fp)) <= 0 ||
++        fseek(fp, 0, SEEK_SET) != 0) {
++        fclose(fp);
++        return OGS_ERROR;
++    }
++    self.hnet[id].pq_key = ogs_malloc(size);
++    ogs_assert(self.hnet[id].pq_key);
++    if (fread(self.hnet[id].pq_key, 1, size, fp) != (size_t)size) {
++        ogs_free(self.hnet[id].pq_key);
++        self.hnet[id].pq_key = NULL;
++        fclose(fp);
++        return OGS_ERROR;
++    }
++    fclose(fp);
++    self.hnet[id].pq_key_len = size;
++    return OGS_OK;
++}
++
+ int ogs_sbi_context_parse_hnet_config(ogs_yaml_iter_t *root_iter)
+ {
+     int rv;
+@@ -689,7 +718,8 @@ int ogs_sbi_context_parse_hnet_config(ogs_yaml_iter_t *root_iter)
+             } else if (!strcmp(hnet_key, "scheme")) {
+                 const char *v = ogs_yaml_iter_value(&hnet_iter);
+                 if (v) {
+-                    if (atoi(v) == 1 || atoi(v) == 2)
++                    if (atoi(v) == 1 || atoi(v) == 2 ||
++                        atoi(v) == OGS_PROTECTION_SCHEME_PQ_MLKEM768)
+                         scheme = atoi(v);
+                 }
+             } else if (!strcmp(hnet_key, "key")) {
+@@ -721,6 +751,16 @@ int ogs_sbi_context_parse_hnet_config(ogs_yaml_iter_t *root_iter)
+                     ogs_error("ogs_pem_decode_secp256r1_key[%s]"
+                             " failed", filename);
+                 }
++            } else if (scheme == OGS_PROTECTION_SCHEME_PQ_MLKEM768) {
++                rv = load_pq_hnet_key(filename, id);
++                if (rv == OGS_OK) {
++                    self.hnet[id].avail = true;
++                    self.hnet[id].scheme = scheme;
++                    ogs_info("hnet[%d]: ML-KEM-768 secret key loaded "
++                            "(%d bytes)", id, (int)self.hnet[id].pq_key_len);
++                } else {
++                    ogs_error("load_pq_hnet_key[%s] failed", filename);
++                }
+             } else
+                 ogs_error("Invalid scheme [%d]", scheme);
+         } else
+diff --git a/lib/sbi/context.h b/lib/sbi/context.h
+index 5a96dbe..c3450b0 100644
+--- a/lib/sbi/context.h
++++ b/lib/sbi/context.h
+@@ -63,6 +63,8 @@ typedef struct ogs_sbi_context_s {
+         uint8_t avail;
+         uint8_t scheme;
+         uint8_t key[OGS_ECCKEY_LEN]; /* 32 bytes Private Key */
++        uint8_t *pq_key;  /* ML-KEM secret key (scheme 12), heap */
++        size_t pq_key_len;
+     } hnet[OGS_HOME_NETWORK_PKI_VALUE_MAX+1]; /* PKI Value : 1 ~ 254 */
+ 
+     struct {
+diff --git a/lib/sbi/conv.c b/lib/sbi/conv.c
+index 4e7942b..98172bc 100644
+--- a/lib/sbi/conv.c
++++ b/lib/sbi/conv.c
+@@ -20,6 +20,117 @@
+ #include "ogs-sbi.h"
+ #include "yuarel.h"
+ 
++#include <time.h>
++#include <oqs/oqs.h>
++
++/*
++ * pq-suci-5g research prototype (NOT standardized): SUCI protection scheme 12,
++ * ML-KEM-768 KEM + the TS 33.501 Annex C DEM (X9.63 KDF, AES-128-CTR,
++ * HMAC-SHA-256/64). Scheme output = ct (1088 B) || AES-CTR(MSIN) || tag (8 B).
++ * KDF: Z = ML-KEM shared secret, SharedInfo = ct.
++ */
++#define PQ_MLKEM768_CT_LEN 1088
++#define PQ_MLKEM768_SS_LEN 32
++
++/* X9.63 KDF (SHA-256) for 64 output bytes with arbitrary-length SharedInfo.
++ * ogs_kdf_ansi_x963() only accepts z_len + 4 + info_len <= 69 bytes. */
++static void pq_kdf_ansi_x963(const uint8_t *z, size_t z_len,
++        const uint8_t *info, size_t info_len,
++        uint8_t *ek, uint8_t *icb, uint8_t *mk)
++{
++    uint8_t out[OGS_SHA256_DIGEST_SIZE * 2];
++    uint32_t counter;
++    int i;
++
++    for (i = 0; i < 2; i++) {
++        ogs_sha256_ctx ctx;
++
++        counter = htobe32(i + 1);
++        ogs_sha256_init(&ctx);
++        ogs_sha256_update(&ctx, z, z_len);
++        ogs_sha256_update(&ctx, (uint8_t *)&counter, sizeof(counter));
++        ogs_sha256_update(&ctx, info, info_len);
++        ogs_sha256_final(&ctx, out + i * OGS_SHA256_DIGEST_SIZE);
++    }
++    memcpy(ek, out, OGS_KEY_LEN);
++    memcpy(icb, out + OGS_KEY_LEN, OGS_IVEC_LEN);
++    memcpy(mk, out + OGS_KEY_LEN + OGS_IVEC_LEN, OGS_SHA256_DIGEST_SIZE);
++}
++
++static char *pq_mlkem768_supi_from_suci(const char *mcc, const char *mnc,
++        uint8_t pki, char *scheme_output_hex)
++{
++    size_t hex_len = strlen(scheme_output_hex);
++    size_t out_len = hex_len / 2, msin_len;
++    uint8_t *out = NULL, *plain = NULL;
++    char *bcd = NULL, *supi = NULL;
++    uint8_t ss[PQ_MLKEM768_SS_LEN];
++    uint8_t ek[OGS_KEY_LEN], icb[OGS_IVEC_LEN], mk[OGS_SHA256_DIGEST_SIZE];
++    uint8_t tag[OGS_MACTAG_LEN], diff = 0;
++    OQS_KEM *kem = NULL;
++    int i;
++
++    if (!ogs_sbi_self()->hnet[pki].avail ||
++        ogs_sbi_self()->hnet[pki].scheme !=
++            OGS_PROTECTION_SCHEME_PQ_MLKEM768 ||
++        !ogs_sbi_self()->hnet[pki].pq_key) {
++        ogs_error("[SIDF] no ML-KEM-768 key for PKI [%d]", pki);
++        return NULL;
++    }
++    if (hex_len % 2 || out_len <= PQ_MLKEM768_CT_LEN + OGS_MACTAG_LEN) {
++        ogs_error("[SIDF] scheme 12 output too short [%d]", (int)hex_len);
++        return NULL;
++    }
++    msin_len = out_len - PQ_MLKEM768_CT_LEN - OGS_MACTAG_LEN;
++
++    out = ogs_calloc(1, out_len);
++    ogs_assert(out);
++    ogs_ascii_to_hex(scheme_output_hex, hex_len, out, out_len);
++
++    kem = OQS_KEM_new(OQS_KEM_alg_ml_kem_768);
++    if (!kem || kem->length_ciphertext != PQ_MLKEM768_CT_LEN ||
++        kem->length_secret_key != ogs_sbi_self()->hnet[pki].pq_key_len) {
++        ogs_error("[SIDF] ML-KEM-768 unavailable or key size mismatch");
++        goto cleanup;
++    }
++    if (OQS_KEM_decaps(kem, ss, out,
++                ogs_sbi_self()->hnet[pki].pq_key) != OQS_SUCCESS) {
++        ogs_error("[SIDF] OQS_KEM_decaps() failed");
++        goto cleanup;
++    }
++
++    pq_kdf_ansi_x963(ss, sizeof(ss), out, PQ_MLKEM768_CT_LEN, ek, icb, mk);
++    ogs_hmac_sha256(mk, OGS_SHA256_DIGEST_SIZE,
++            out + PQ_MLKEM768_CT_LEN, msin_len, tag, OGS_MACTAG_LEN);
++    for (i = 0; i < OGS_MACTAG_LEN; i++)
++        diff |= tag[i] ^ out[PQ_MLKEM768_CT_LEN + msin_len + i];
++    if (diff) {
++        ogs_error("[SIDF] scheme 12 MAC-tag not matched");
++        goto cleanup;
++    }
++
++    plain = ogs_calloc(1, msin_len);
++    ogs_assert(plain);
++    ogs_aes_ctr128_encrypt(ek, icb, out + PQ_MLKEM768_CT_LEN, msin_len, plain);
++
++    bcd = ogs_calloc(1, msin_len * 2 + 1);
++    ogs_assert(bcd);
++    ogs_buffer_to_bcd(plain, msin_len, bcd);
++    supi = ogs_msprintf("imsi-%s%s%s", mcc, mnc, bcd);
++    ogs_assert(supi);
++
++cleanup:
++    OQS_MEM_cleanse(ss, sizeof(ss));
++    if (kem)
++        OQS_KEM_free(kem);
++    if (plain)
++        ogs_free(plain);
++    if (bcd)
++        ogs_free(bcd);
++    ogs_free(out);
++    return supi;
++}
++
+ static int parse_scheme_output(
+         char *_protection_scheme_id, char *_scheme_output,
+         ogs_datum_t *ecckey, ogs_datum_t *cipher_text, uint8_t *mactag)
+@@ -79,7 +190,7 @@ static int parse_scheme_output(
+     return OGS_OK;
+ }
+ 
+-char *ogs_supi_from_suci(char *suci)
++static char *supi_from_suci_impl(char *suci)
+ {
+ #define MAX_SUCI_TOKEN 16
+     char *array[MAX_SUCI_TOKEN];
+@@ -118,6 +229,16 @@ char *ogs_supi_from_suci(char *suci)
+                 if (protection_scheme_id == OGS_PROTECTION_SCHEME_NULL) {
+                     supi = ogs_msprintf("imsi-%s%s%s",
+                             array[2], array[3], array[7]);
++                } else if (protection_scheme_id ==
++                        OGS_PROTECTION_SCHEME_PQ_MLKEM768) {
++                    if (home_network_pki_value >=
++                            OGS_HOME_NETWORK_PKI_VALUE_MIN &&
++                        home_network_pki_value <=
++                            OGS_HOME_NETWORK_PKI_VALUE_MAX)
++                        supi = pq_mlkem768_supi_from_suci(array[2], array[3],
++                                home_network_pki_value, array[7]);
++                    else
++                        ogs_error("Invalid HNET PKI Value [%s]", array[6]);
+                 } else if (protection_scheme_id ==
+                             OGS_PROTECTION_SCHEME_PROFILE_A ||
+                         protection_scheme_id ==
+@@ -248,6 +369,27 @@ cleanup:
+     return supi;
+ }
+ 
++/* pq-suci-5g: time every SIDF de-concealment and log it for the experiments */
++char *ogs_supi_from_suci(char *suci)
++{
++    struct timespec t0, t1;
++    char *supi;
++    const char *p = suci;
++    int dashes = 0;
++
++    clock_gettime(CLOCK_MONOTONIC, &t0);
++    supi = supi_from_suci_impl(suci);
++    clock_gettime(CLOCK_MONOTONIC, &t1);
++
++    while (*p && dashes < 5)
++        if (*p++ == '-')
++            dashes++;
++    ogs_info("[SIDF] scheme=%d suci_len=%d supi=%s deconceal_us=%.1f",
++            atoi(p), (int)strlen(suci), supi ? supi : "FAILED",
++            (t1.tv_sec - t0.tv_sec) * 1e6 + (t1.tv_nsec - t0.tv_nsec) / 1e3);
++    return supi;
++}
++
+ char *ogs_supi_from_supi_or_suci(char *supi_or_suci)
+ {
+     char *type = NULL;
+diff --git a/lib/sbi/meson.build b/lib/sbi/meson.build
+index 67a1bad..9e31ece 100644
+--- a/lib/sbi/meson.build
++++ b/lib/sbi/meson.build
+@@ -53,6 +53,7 @@ libcrypto_dep = dependency('libcrypto', required : true)
+ libnghttp2_dep = dependency('libnghttp2', version: '>=1.18.1')
+ libmicrohttpd_dep = dependency('libmicrohttpd', version: '>=0.9.40')
+ libcurl_dep = dependency('libcurl', version: '>=7.52.1')
++liboqs_dep = dependency('liboqs')  # pq-suci-5g: ML-KEM for SUCI scheme 12
+ 
+ libsbi = library('ogssbi',
+     sources : libsbi_sources,
+@@ -67,7 +68,8 @@ libsbi = library('ogssbi',
+                     libcrypto_dep,
+                     libnghttp2_dep,
+                     libmicrohttpd_dep,
+-                    libcurl_dep],
++                    libcurl_dep,
++                    liboqs_dep],
+     install_rpath : libdir,
+     install : true)
+ 
