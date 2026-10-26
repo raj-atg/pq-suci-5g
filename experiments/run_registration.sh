@@ -70,4 +70,4 @@ if [[ "$ok" -eq 1 && "$PING" -eq 1 ]]; then
   fi
 fi
 sleep 1  # let the last SBI/NGAP messages reach the capture
-echo "ue_config=$CFG n=$N sessions_ok=$done_count/$N success=$ok ping=$ping_result" | tee "$OUT.status"
+echo "ue_config=${CFG#"$ROOT"/} n=$N sessions_ok=$done_count/$N success=$ok ping=$ping_result" | tee "$OUT.status"

@@ -1,0 +1,1 @@
+Registration time (left) and PDU session setup time (middle) per scheme for the pq core, with box plots (median, quartiles, whiskers) and individual runs as points, from e3_registration.csv. Right: stock versus patched core for the schemes both can run.

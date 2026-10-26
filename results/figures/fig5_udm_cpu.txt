@@ -1,0 +1,1 @@
+CPU time consumed by the UDM (the SIDF host) per registration storm (left) and divided by the number of UEs (right) for the pq core. Points are means over repetitions with min to max error bars, from e4_udm_cpu.csv.

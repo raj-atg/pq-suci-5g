@@ -84,14 +84,46 @@ results/          raw data, processed CSV files, figures
 
 ## Results
 
-<!-- RESULTS: filled in after experiments -->
+Measured on one laptop (Intel Core i3-1005G1, Ubuntu 26.04 on WSL2). Values from
+[`results/processed/summary.csv`](results/processed/summary.csv); discussion in
+[docs/07-results-and-discussion.md](docs/07-results-and-discussion.md).
 
-Figures:
+| | Profile A (1) | Profile B (2) | ML-KEM-768 (12) |
+|---|---|---|---|
+| Scheme output (bytes) | 45 | 46 | 1101 |
+| SUCI string in the SBI URI (characters) | 113 | 115 | 2226 |
+| NAS Registration Request (bytes, measured) | 65 | 66 | 1121 |
+| Conceal, Python (us, median) | 92.0 | 142.7 | 41.8 |
+| De-conceal in the Open5GS UDM (us, median) | 598.5 | 1557.0 | 90.5 |
+| Registration, 1 UE (ms, median of 30) | 29.2 | 27.5 | 26.2 |
+| Registration, 100 simultaneous UEs (ms, median) | 805.7 | 806.2 | 725.7 |
+| UDM CPU per UE, 100 UEs (ms) | 5.40 | 6.07 | 4.07 |
+| Registers on the real core | yes (stock) | yes (patched UE) | yes (patched UE, AMF, UDM) |
 
-- ![Sizes](results/figures/fig1_sizes.png)
-- ![Wireshark comparison](results/figures/fig9_wireshark_compare.png)
+In short:
 
-<!-- RESULTS: the remaining figures (fig2 to fig8) are added after experiments -->
+- **Size is the cost.** The post-quantum SUCI is about 24 times larger. With a small uplink grant
+  that is up to 10 extra 0.5 ms slots on the radio (model, `results/processed/e5_airtime.csv`).
+- **CPU time is not.** ML-KEM-768 was faster than both ECIES profiles, in Python and inside Open5GS.
+- **A real core can carry it.** Nothing in NAS, NGAP or the HTTP/2 service interface limited the
+  1.1 kB SUCI. What had to change were hardcoded scheme lists and fixed key and buffer sizes in the
+  UE, the AMF and the UDM, listed with file and line in
+  [docs/05-tier3-integration.md](docs/05-tier3-integration.md).
+
+### Figures
+
+| | |
+|---|---|
+| ![SUCI size per scheme](results/figures/fig1_sizes.png) | ![Compute time](results/figures/fig2_compute.png) |
+| Fig. 1: SUCI size per scheme | Fig. 2: conceal and de-conceal time (Python, liboqs, in-stack) |
+| ![Registration latency](results/figures/fig3_registration_latency.png) | ![Attach storm latency](results/figures/fig4_storm_latency.png) |
+| Fig. 3: single-UE registration latency | Fig. 4: latency vs simultaneous UEs |
+| ![UDM CPU](results/figures/fig5_udm_cpu.png) | ![SIDF capacity model](results/figures/fig6_sidf_capacity.png) |
+| Fig. 5: UDM CPU during attach storms | Fig. 6: SIDF capacity model (M/M/c) |
+| ![Uplink airtime](results/figures/fig7_airtime.png) | ![Null vs scheme 12 on the wire](results/figures/fig9_wireshark_compare.png) |
+| Fig. 7: extra uplink airtime (model) | Fig. 9: what an eavesdropper sees |
+
+Fig. 8 is the registration sequence diagram in [docs/09](docs/09-technical-deep-dive.md#71-where-the-suci-travels).
 
 ## Documentation
 

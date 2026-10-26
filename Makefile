@@ -45,7 +45,7 @@ lint:  ## ruff, shellcheck and the em dash check
 	scripts/check_no_emdash.sh
 
 bench:  ## E1 microbenchmarks (Python and native liboqs)
-	$(PY) bench/e1_micro.py
+	bench/e1_repeat.sh 3
 	bench/e1_native.sh
 
 experiments:  ## Run all experiments (E1 to E6); needs the core and builds

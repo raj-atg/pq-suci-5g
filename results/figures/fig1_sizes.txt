@@ -1,0 +1,1 @@
+Size of the concealed SUPI field (left, bytes) and of the SUCI string (right, characters) for each protection scheme, on a log scale, taken from e2_sizes_computed.csv. Schemes marked * are benchmark only (no standardized scheme ID).

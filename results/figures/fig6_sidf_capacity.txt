@@ -1,0 +1,1 @@
+Modelled mean SIDF response time versus registration arrival rate for 1 and 4 workers, using service times measured with the python implementation (e5_sidf_capacity.csv). Dotted vertical lines mark each scheme's saturation rate from e5_sidf_saturation.csv. Schemes marked * are benchmark only (no standardized scheme ID).

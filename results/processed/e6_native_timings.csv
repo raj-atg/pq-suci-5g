@@ -1,0 +1,8 @@
+impl,side,scheme,n,median_us,p95_us,mean_us
+c-native,sidf_deconceal,mlkem768,31,90.5,153.1,215.3
+c-native,sidf_deconceal,null,33,2.8,4.5,2.9
+c-native,sidf_deconceal,profile-a,31,598.5,1179.2,760.0
+c-native,sidf_deconceal,profile-b,32,1557.0,2115.0,1677.3
+c-native,ue_conceal,mlkem768,30,1857.2,15550.6,3080.5
+c-native,ue_conceal,profile-a,30,7136.1,15896.9,8614.2
+c-native,ue_conceal,profile-b,30,2286.6,26927.4,5854.3

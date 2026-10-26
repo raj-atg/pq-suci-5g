@@ -14,14 +14,14 @@ OQS build flags:  BUILD_SHARED_LIBS OQS_DIST_BUILD OQS_LIBJADE_BUILD OQS_OPT_TAR
 CPU exts active:  ADX AES AVX AVX2 AVX512 BMI1 BMI2 PCLMULQDQ VPCLMULQDQ POPCNT SSE SSE2 SSE3
 Speed test
 ==========
-Started at 2026-10-26 16:14:44
+Started at 2026-10-26 16:41:01
 Operation                            | Iterations | Total time (s) | Time (us): mean | pop. stdev | CPU cycles: mean          | pop. stdev
 ------------------------------------ | ----------:| --------------:| ---------------:| ----------:| -------------------------:| ----------:
 ML-KEM-512                           |            |                |                 |            |                           |           
-keygen                               |     425821 |          3.000 |           7.045 |      9.607 |                      8340 |      11404
-encaps                               |     426672 |          3.000 |           7.031 |      5.154 |                      8331 |       6087
-decaps                               |     376166 |          3.000 |           7.975 |      5.113 |                      9457 |       6029
-Ended at 2026-10-26 16:14:53
+keygen                               |     530845 |          3.000 |           5.651 |      3.865 |                      6693 |       4554
+encaps                               |     423444 |          3.000 |           7.085 |     20.480 |                      8394 |      24353
+decaps                               |     336367 |          3.000 |           8.919 |     51.801 |                     10565 |      61520
+Ended at 2026-10-26 16:41:10
 Configuration info
 ==================
 Target platform:  x86_64-Linux-6.18.54.1-microsoft-standard-WSL2
@@ -37,14 +37,14 @@ OQS build flags:  BUILD_SHARED_LIBS OQS_DIST_BUILD OQS_LIBJADE_BUILD OQS_OPT_TAR
 CPU exts active:  ADX AES AVX AVX2 AVX512 BMI1 BMI2 PCLMULQDQ VPCLMULQDQ POPCNT SSE SSE2 SSE3
 Speed test
 ==========
-Started at 2026-10-26 16:14:53
+Started at 2026-10-26 16:41:10
 Operation                            | Iterations | Total time (s) | Time (us): mean | pop. stdev | CPU cycles: mean          | pop. stdev
 ------------------------------------ | ----------:| --------------:| ---------------:| ----------:| -------------------------:| ----------:
 ML-KEM-768                           |            |                |                 |            |                           |           
-keygen                               |     264834 |          3.000 |          11.328 |     34.909 |                     13438 |      41529
-encaps                               |     269944 |          3.000 |          11.113 |      8.061 |                     13187 |       9561
-decaps                               |     234324 |          3.000 |          12.803 |     13.374 |                     15201 |      15893
-Ended at 2026-10-26 16:15:02
+keygen                               |     274791 |          3.000 |          10.917 |     27.932 |                     12944 |      33138
+encaps                               |     305247 |          3.000 |           9.828 |      7.975 |                     11659 |       9357
+decaps                               |     249827 |          3.000 |          12.008 |     35.459 |                     14260 |      42195
+Ended at 2026-10-26 16:41:19
 Configuration info
 ==================
 Target platform:  x86_64-Linux-6.18.54.1-microsoft-standard-WSL2
@@ -60,11 +60,11 @@ OQS build flags:  BUILD_SHARED_LIBS OQS_DIST_BUILD OQS_LIBJADE_BUILD OQS_OPT_TAR
 CPU exts active:  ADX AES AVX AVX2 AVX512 BMI1 BMI2 PCLMULQDQ VPCLMULQDQ POPCNT SSE SSE2 SSE3
 Speed test
 ==========
-Started at 2026-10-26 16:15:02
+Started at 2026-10-26 16:41:19
 Operation                            | Iterations | Total time (s) | Time (us): mean | pop. stdev | CPU cycles: mean          | pop. stdev
 ------------------------------------ | ----------:| --------------:| ---------------:| ----------:| -------------------------:| ----------:
 ML-KEM-1024                          |            |                |                 |            |                           |           
-keygen                               |     244459 |          3.000 |          12.272 |      8.338 |                     14567 |       9888
-encaps                               |     201303 |          3.000 |          14.903 |      9.524 |                     17691 |      11301
-decaps                               |     163175 |          3.000 |          18.385 |     15.433 |                     21838 |      18339
-Ended at 2026-10-26 16:15:11
+keygen                               |     240536 |          3.000 |          12.472 |      8.245 |                     14806 |       9767
+encaps                               |     216334 |          3.005 |          13.889 |     25.229 |                     16480 |      29907
+decaps                               |     190244 |          3.000 |          15.769 |      6.647 |                     18731 |       7837
+Ended at 2026-10-26 16:41:28

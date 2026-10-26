@@ -77,3 +77,10 @@ Short entries: context, decision, reason.
 - Decision: document this as a general project, not a case study: plain, matter-of-fact
   tone; what it is, what it is used for, why, and how to install and run it, on native
   Ubuntu and on WSL2.
+
+## D13. Public repository clean-up (user decision)
+- Context: the repository was made public.
+- Decision: history rewritten once with git-filter-repo (author emails to the GitHub no-reply
+  address; test private keys, generated UE configs and the internal task notes removed from all
+  commits; local user and Windows paths replaced), then force-pushed with tags. Test keys and UE
+  configs are now generated locally by `make keys` and gitignored.

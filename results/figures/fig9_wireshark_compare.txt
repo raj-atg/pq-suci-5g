@@ -1,0 +1,1 @@
+Dissected 5GS mobile identity from the registration request, in the style of a Wireshark detail pane: the null scheme (left) carries the MSIN in clear, while scheme 12 (ML-KEM-768) (right) carries an encrypted scheme output field instead. Long lines are truncated. Sources: results/raw/tier1/null.mobile_identity.txt and results/raw/tier3/pq.mobile_identity.txt.

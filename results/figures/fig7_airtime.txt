@@ -1,0 +1,1 @@
+Extra uplink airtime to carry the larger SUCI relative to Profile A, from e5_airtime.csv. Model: NR 30 kHz subcarrier spacing (0.5 ms slot), 1 layer, 12 data symbols per slot, illustrative code rates, no transport block quantization, protocol headers or retransmissions (see e5_airtime_notes.txt).

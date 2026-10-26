@@ -85,6 +85,9 @@ def sh(cmd: str) -> str:
 def write_env(path: Path, pre_load: str) -> None:
     """Write environment details, including load recorded before the run started."""
     cpu_model = sh("lscpu").split("Model name:")[1].splitlines()[0].strip()
+    # Repo-relative command line, so no local user paths end up in the results.
+    argv = [os.path.relpath(a, ROOT) if os.path.isabs(a) else a for a in sys.argv]
+    command = shlex.join([os.path.relpath(sys.executable, ROOT), *argv])
     lines = [
         f"cpu_model: {cpu_model}",
         f"nproc: {sh('nproc')}",
@@ -94,7 +97,7 @@ def write_env(path: Path, pre_load: str) -> None:
         f"liboqs-python: {metadata.version('liboqs-python')}",
         f"liboqs: {oqs.oqs_version()}",
         f"date_utc: {datetime.now(UTC).isoformat()}",
-        f"command: {shlex.join([os.path.relpath(sys.executable, ROOT), *sys.argv])}",
+        f"command: {command}",
         "",
         pre_load,
     ]

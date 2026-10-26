@@ -1,0 +1,16 @@
+Column sources (results/processed/):
+scheme_output_bytes: e2_sizes_computed.csv
+suci_string_chars: e2_sizes_computed.csv
+nas_reg_request_bytes: e3_registration.csv (median, patched core)
+py_conceal_us: e1_repeatability.csv (median of 3 run medians)
+py_deconceal_us: e1_repeatability.csv (median of 3 run medians)
+native_ue_conceal_us: e6_native_timings.csv (median, UERANSIM in-stack)
+native_sidf_deconceal_us: e6_native_timings.csv (median, Open5GS UDM in-stack)
+e3_registration_median_ms: e3_registration.csv (core=pq, 30 runs)
+e3_registration_p95_ms: e3_registration.csv (core=pq, 30 runs)
+e3_session_median_ms: e3_registration.csv (core=pq, 30 runs)
+e4_100ue_registration_median_ms: e4_storm.csv (n_ues=100, 3 reps x 100 UEs)
+e4_100ue_registration_p90_ms: e4_storm.csv (n_ues=100, 3 reps x 100 UEs)
+e4_100ue_udm_cpu_ms_per_ue: e4_udm_cpu.csv (n_ues=100, mean of 3 reps)
+e4_100ue_sessions_ok: e4_udm_cpu.csv (n_ues=100, all reps)
+registered_on_core: tier3_interop.csv (match=True on the patched core)

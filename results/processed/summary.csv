@@ -1,0 +1,8 @@
+scheme,scheme_output_bytes,suci_string_chars,nas_reg_request_bytes,py_conceal_us,py_deconceal_us,native_ue_conceal_us,native_sidf_deconceal_us,e3_registration_median_ms,e3_registration_p95_ms,e3_session_median_ms,e4_100ue_registration_median_ms,e4_100ue_registration_p90_ms,e4_100ue_udm_cpu_ms_per_ue,e4_100ue_sessions_ok,registered_on_core
+null,5,33,25.0,0.104,0.111,,2.8,33.4,51.9,251.0,856.5,1099.8,3.67,100/100 100/100 100/100,yes
+profile-a,45,113,65.0,92.025,88.392,7136.1,598.5,29.2,54.0,252.6,805.7,1090.8,5.4,100/100 100/100 100/100,yes
+profile-b,46,115,66.0,142.703,149.053,2286.6,1557.0,27.5,36.1,253.8,806.2,1028.2,6.07,100/100 100/100 100/100,yes
+mlkem768 (scheme 12),1101,2226,1121.0,41.829,44.438,1857.2,90.5,26.2,33.2,249.8,725.7,832.7,4.07,100/100 100/100 100/100,yes
+hybrid (scheme 13),1133,2290,,131.688,129.029,,,,,,,,,,not tested
+mlkem512 (benchmark only),781,1586,,37.032,40.192,,,,,,,,,,not tested
+mlkem1024 (benchmark only),1581,3186,,45.939,50.669,,,,,,,,,,not tested

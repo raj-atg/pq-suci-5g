@@ -1,0 +1,1 @@
+Median (solid) and 90th percentile (dashed) registration time versus the number of UEs registering together for the pq core, pooled over repetitions, from e4_storm.csv. The x axis is categorical.

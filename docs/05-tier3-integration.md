@@ -45,9 +45,19 @@ Observation (no change made): the stock Profile A code seeds its ephemeral key f
 | O10 | `lib/nas/5gs/types.h:254` | 5GS mobile identity length is `uint16_t` | no effect (1109 bytes fits) | none |
 | O11 | SBI (HTTP/2) path with the SUCI in the URI | none found | no effect: a 2226-character SUCI passed AMF to AUSF to UDM | none |
 
-Also found: `src/udm/context.c:181` and `src/udm/udm-sm.c:183` both call
-`ogs_supi_from_supi_or_suci()`, so the UDM can de-conceal the same SUCI more than once per
-registration. The measured count per registration is in [07-results-and-discussion.md](07-results-and-discussion.md).
+Also checked: `src/udm/context.c:181` and `src/udm/udm-sm.c:183` both call
+`ogs_supi_from_supi_or_suci()`. In normal registrations the SIDF ran once per registration:
+30 `[SIDF]` lines for 30 registrations for each of schemes 1, 2 and 12 in the E3 window of
+`results/raw/e3/pq/udm.log`.
+
+Also found during the attach storms (E4): the AUSF keeps one UE context per SUCI string
+(`src/ausf/context.c:138`, pool size `global.max.ue`). A concealed SUCI is different on every
+registration, so a UE that never deregisters leaves a context behind each time. After about 1024
+such registrations on one running core, new registrations failed with
+`FIVEG_SERVICES_NOT_ALLOWED`. This affects every protected scheme (Profile A/B and scheme 12), not
+only post-quantum ones, and is caused by our test UEs being stopped without deregistration. The
+affected runs are kept in `results/raw/e4/invalid_ausf_pool/` and were repeated with a core
+restart per scheme.
 
 ## 2. What the patches add
 

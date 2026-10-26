@@ -1,0 +1,7 @@
+Linux 6.18.54.1-microsoft-standard-WSL2 (host) 	10/26/26 	_x86_64_	(4 CPU)
+
+# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command
+16:38:58     1000    157698    0.00    0.00    0.00    0.00    0.00     3  open5gs-udmd
+16:38:59     1000    157698    0.00    0.00    0.00    0.00    0.00     3  open5gs-udmd
+16:39:00     1000    157698    1.00    0.00    0.00    0.00    1.00     3  open5gs-udmd
+16:39:01     1000    157698    0.00    0.00    0.00    0.00    0.00     3  open5gs-udmd

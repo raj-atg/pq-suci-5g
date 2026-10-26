@@ -314,8 +314,6 @@ list with file and line is in [05-tier3-integration.md](05-tier3-integration.md)
 
 ## 8. Findings
 
-<!-- RESULTS: E3/E4/E6 sections filled in after experiments -->
-
 ### 8.1 Size (E2)
 
 From `results/processed/e2_sizes_computed.csv`:
@@ -335,30 +333,50 @@ same sizes were seen on the wire: the 5GS mobile identity in the scheme 12 captu
 1109 (+2 length bytes = 1111), and the SBI URI carried a 2226-character SUCI
 (`results/processed/tier3_interop.csv`).
 
-### 8.2 Compute (E1)
+### 8.2 Compute (E1, E6)
 
-Median times in microseconds, Python (`cryptography` for ECIES, liboqs-python for ML-KEM), 2000
-iterations on an idle Intel Core i3-1005G1, from `results/processed/e1_micro_python.csv`:
+Python (`cryptography` for ECIES, liboqs-python for ML-KEM), median of three run medians on an idle
+Intel Core i3-1005G1, 2000 iterations per run, from `results/processed/e1_repeatability.csv`:
 
-| Scheme | Conceal (UE) median | Conceal p95 | De-conceal (SIDF) median | De-conceal p95 |
-|---|---|---|---|---|
-| Profile A | 106.5 | 209.7 | 103.3 | 195.1 |
-| Profile B | 168.9 | 313.3 | 185.7 | 355.6 |
-| ML-KEM-512 | 42.2 | 118.8 | 40.0 | 90.4 |
-| ML-KEM-768 (scheme 12) | 43.9 | 103.3 | 50.8 | 106.3 |
-| ML-KEM-1024 | 52.5 | 127.4 | 51.2 | 103.5 |
-| Hybrid (scheme 13) | 159.3 | 345.7 | 158.8 | 358.6 |
+| Scheme | Conceal (UE), us | De-conceal (SIDF), us |
+|---|---|---|
+| Profile A | 92.0 | 88.4 |
+| Profile B | 142.7 | 149.1 |
+| ML-KEM-512 (benchmark only) | 37.0 | 40.2 |
+| Scheme 12, ML-KEM-768 | 41.8 | 44.4 |
+| ML-KEM-1024 (benchmark only) | 45.9 | 50.7 |
+| Scheme 13, hybrid | 131.7 | 129.0 |
 
-Native liboqs (`speed_kem`), mean microseconds, from `results/processed/e1_native_liboqs.csv`:
-ML-KEM-768 keygen 11.8, encaps 12.8, decaps 12.5.
+Native liboqs (`speed_kem`), mean, from `results/processed/e1_native_liboqs.csv`: ML-KEM-768
+keygen 10.9 us, encaps 9.8 us, decaps 12.0 us.
 
-So on this machine, post-quantum SUCI costs bytes, not CPU time: ML-KEM-768 is faster than
-both ECIES profiles in the same Python harness, and the hybrid costs about the sum of X25519
-and ML-KEM.
+Inside the real stack, median de-conceal time in the Open5GS UDM (`results/processed/e6_native_timings.csv`):
+598.5 us for Profile A, 1557.0 us for Profile B, 90.5 us for scheme 12.
 
-### 8.3 Real core (E3, E4, E6)
+So on this machine, post-quantum SUCI costs bytes, not CPU time. ML-KEM-768 is faster than both
+ECIES profiles, and the hybrid costs about the sum of X25519 and ML-KEM.
 
-<!-- RESULTS: filled in after experiments -->
+### 8.3 Real core (E3, E4)
+
+From `results/processed/summary.csv` (sources listed in `summary_notes.txt`):
+
+| Scheme | Registered on core | NAS Registration Request (B) | Registration median, 1 UE (ms) | Registration median, 100 UEs (ms) | UDM CPU per UE, 100 UEs (ms) |
+|---|---|---|---|---|---|
+| null | yes | 25 | 33.4 | 856.5 | 3.67 |
+| Profile A | yes | 65 | 29.2 | 805.7 | 5.40 |
+| Profile B | yes (patched UE) | 66 | 27.5 | 806.2 | 6.07 |
+| Scheme 12 | yes (patched UE, AMF, UDM) | 1121 | 26.2 | 725.7 | 4.07 |
+
+Registration latency and UDM load with scheme 12 were not worse than with the ECIES profiles.
+The differences between schemes are within the run-to-run variation.
+
+### 8.4 Radio (E5 model)
+
+Scheme 12 adds 1056 bytes to the first uplink message compared with Profile A
+(`results/processed/e5_airtime.csv`). Under the stated model this is 10 extra 0.5 ms slots with a
+10 PRB QPSK grant and 1 extra slot with 50 PRB 16QAM or any 273 PRB grant. The radio, not the
+CPU, is where the post-quantum cost shows up. Discussion of all results:
+[07-results-and-discussion.md](07-results-and-discussion.md).
 
 ## 9. References
 
