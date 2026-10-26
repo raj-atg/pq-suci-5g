@@ -26,6 +26,10 @@ This project measures:
 - Interoperability: whether a real 5G core can carry and process the new SUCI.
 - Capacity effect: how registration load changes with the new schemes.
 
+For the cryptography (elliptic curves, ECIES, the quantum threat, ML-KEM and lattices), prior
+work, the 5G message flows, how the architecture is changed to carry a post-quantum SUCI, and
+the findings, read [docs/09-technical-deep-dive.md](docs/09-technical-deep-dive.md).
+
 ## Use cases
 
 - Evaluating the cost of post-quantum identity protection.
@@ -95,7 +99,11 @@ Figures:
 - [02 SUCI explained](docs/02-suci-explained.md)
 - [03 Post-quantum design](docs/03-pq-design.md)
 - [04 Setup and troubleshooting](docs/04-setup.md)
-- docs/05 to docs/08: added as the project grows
+- [05 Tier 3 integration: code changes and limits found](docs/05-tier3-integration.md)
+- [06 Experiments: method and metrics](docs/06-experiments.md)
+- [07 Results and discussion](docs/07-results-and-discussion.md)
+- [08 Limitations and lab plan](docs/08-limitations-and-lab.md)
+- [09 Technical deep dive: cryptography, 5G integration, prior work and findings](docs/09-technical-deep-dive.md)
 - [Glossary](docs/glossary.md)
 - [Decisions](docs/decisions.md)
 - [Versions](docs/versions.md)
