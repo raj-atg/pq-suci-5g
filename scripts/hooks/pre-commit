@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Reject commits that add U+2014 (em dash) in staged files, staged file names or the commit itself.
+set -euo pipefail
+ROOT="$(git rev-parse --show-toplevel)"
+mapfile -t staged < <(git diff --cached --name-only --diff-filter=ACMR)
+[[ ${#staged[@]} -eq 0 ]] && exit 0
+exec "$ROOT/scripts/check_no_emdash.sh" "${staged[@]}"

@@ -1,0 +1,37 @@
+[project]
+name = "pqsuci"
+version = "0.1.0"
+description = "Research prototype: ECIES (TS 33.501 Profile A/B) and ML-KEM based SUCI concealment"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+  "cryptography>=43",
+  "liboqs-python",
+  "numpy",
+  "pandas",
+  "matplotlib",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff"]
+
+[project.scripts]
+pqsuci = "pqsuci.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests", "bench", "experiments"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

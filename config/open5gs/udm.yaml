@@ -1,0 +1,23 @@
+# Open5GS UDM config for pq-suci-5g (from v2.8.0 configs/open5gs/udm.yaml.in).
+# @RUNTIME@ and @KEYS@ are replaced by scripts/start_core.sh.
+logger:
+  file:
+    path: @RUNTIME@/log/udm.log
+global:
+  max:
+    ue: 1024
+udm:
+  hnet:
+    - id: 1
+      scheme: 1
+      key: @KEYS@/curve25519-1.key
+    - id: 2
+      scheme: 2
+      key: @KEYS@/secp256r1-2.key
+  sbi:
+    server:
+      - address: 127.0.0.12
+        port: 7777
+    client:
+      scp:
+        - uri: http://127.0.0.200:7777

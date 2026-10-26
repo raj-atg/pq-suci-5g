@@ -1,0 +1,16 @@
+# Open5GS SCP config for pq-suci-5g (from v2.8.0 configs/open5gs/scp.yaml.in).
+# @RUNTIME@ and @KEYS@ are replaced by scripts/start_core.sh.
+logger:
+  file:
+    path: @RUNTIME@/log/scp.log
+global:
+  max:
+    ue: 1024
+scp:
+  sbi:
+    server:
+      - address: 127.0.0.200
+        port: 7777
+    client:
+      nrf:
+        - uri: http://127.0.0.10:7777

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Reject commit messages containing U+2014.
+set -euo pipefail
+if grep -qF -- "$(printf '\xe2\x80\x94')" "$1"; then
+  echo "ERROR: commit message contains an em dash (U+2014)." >&2
+  exit 1
+fi

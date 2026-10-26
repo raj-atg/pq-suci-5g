@@ -1,0 +1,17 @@
+# Open5GS UDR config for pq-suci-5g (from v2.8.0 configs/open5gs/udr.yaml.in).
+# @RUNTIME@ and @KEYS@ are replaced by scripts/start_core.sh.
+db_uri: mongodb://localhost/open5gs
+logger:
+  file:
+    path: @RUNTIME@/log/udr.log
+global:
+  max:
+    ue: 1024
+udr:
+  sbi:
+    server:
+      - address: 127.0.0.20
+        port: 7777
+    client:
+      scp:
+        - uri: http://127.0.0.200:7777

@@ -1,0 +1,16 @@
+# Open5GS BSF config for pq-suci-5g (from v2.8.0 configs/open5gs/bsf.yaml.in).
+# @RUNTIME@ and @KEYS@ are replaced by scripts/start_core.sh.
+logger:
+  file:
+    path: @RUNTIME@/log/bsf.log
+global:
+  max:
+    ue: 1024
+bsf:
+  sbi:
+    server:
+      - address: 127.0.0.15
+        port: 7777
+    client:
+      scp:
+        - uri: http://127.0.0.200:7777

@@ -1,0 +1,17 @@
+# Open5GS NRF config for pq-suci-5g (from v2.8.0 configs/open5gs/nrf.yaml.in).
+# @RUNTIME@ and @KEYS@ are replaced by scripts/start_core.sh.
+logger:
+  file:
+    path: @RUNTIME@/log/nrf.log
+global:
+  max:
+    ue: 1024
+nrf:
+  serving:
+    - plmn_id:
+        mcc: 999
+        mnc: 70
+  sbi:
+    server:
+      - address: 127.0.0.10
+        port: 7777

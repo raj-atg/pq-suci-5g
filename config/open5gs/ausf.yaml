@@ -1,0 +1,16 @@
+# Open5GS AUSF config for pq-suci-5g (from v2.8.0 configs/open5gs/ausf.yaml.in).
+# @RUNTIME@ and @KEYS@ are replaced by scripts/start_core.sh.
+logger:
+  file:
+    path: @RUNTIME@/log/ausf.log
+global:
+  max:
+    ue: 1024
+ausf:
+  sbi:
+    server:
+      - address: 127.0.0.11
+        port: 7777
+    client:
+      scp:
+        - uri: http://127.0.0.200:7777

@@ -1,0 +1,15 @@
+third_party/
+build/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+# runtime data
+runtime/
+*.log
+# large captures (small samples are kept under results/raw/pcap_samples/)
+results/raw/**/*.pcap
+results/raw/**/*.pcapng
+!results/raw/pcap_samples/*.pcap
