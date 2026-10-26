@@ -22,3 +22,15 @@ MongoDB repository check: `repo.mongodb.org` has an official `resolute` reposito
 Package notes for Ubuntu 26.04: `libmongoc-dev`/`libbson-dev` are version 2.x and provide the
 pkg-config name `mongoc2`. Open5GS v2.8.0 accepts this (`lib/dbi/meson.build` falls back from
 `libmongoc-1.0` to `mongoc2`). The system Python is 3.14.
+
+## Build workarounds
+
+None were needed. `scripts/build_all.sh` builds liboqs 0.16.0, Open5GS v2.8.0 and UERANSIM v3.3.0
+unmodified with gcc 15.2.0 and cmake 4.2.3 (no build errors; UERANSIM's `cmake_minimum_required(VERSION 3.17)`
+is accepted by cmake 4.2). Open5GS finds libmongoc through the `mongoc2` pkg-config fallback.
+Builds use at most 3 parallel jobs. Logs: `build/logs/{liboqs,open5gs,ueransim}.log`.
+Run a single step with `scripts/build_all.sh open5gs` (steps: liboqs, open5gs, ueransim).
+
+Install locations: Open5GS binaries in `third_party/install/open5gs/bin/`, default configs in
+`third_party/install/open5gs/etc/open5gs/*.yaml`, DB tool at `third_party/open5gs/misc/db/open5gs-dbctl`.
+UERANSIM binaries in `third_party/UERANSIM/build/` (nr-gnb, nr-ue, nr-cli, nr-binder, libdevbnd.so).

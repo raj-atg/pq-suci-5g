@@ -59,7 +59,6 @@ build_ueransim() {
   fi
   clone https://github.com/aligungr/UERANSIM.git "$UERANSIM_TAG" "$TP/UERANSIM"
   {
-    # WORKAROUNDS_PLACEHOLDER
     cd "$TP/UERANSIM"
     CMAKE_BUILD_PARALLEL_LEVEL="$JOBS" make -j"$JOBS"
   } 2>&1 | tee "$LOGS/ueransim.log"

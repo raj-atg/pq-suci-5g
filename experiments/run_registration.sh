@@ -19,6 +19,13 @@ done
 [[ -n "$CFG" && -n "$OUT" ]] || { echo "usage: $0 -c UE_CONFIG -o OUT_PREFIX [-n N]" >&2; exit 2; }
 mkdir -p "$(dirname "$OUT")"
 
+# For the ping check the UE tunnel goes into its own network namespace: on a single host the
+# UPF tun address (10.45.0.1) is local, so a ping from the root namespace never enters GTP-U.
+if [[ "$PING" -eq 1 ]]; then
+  sed 's/^useNamespace: false/useNamespace: true/' "$CFG" >"$OUT.ue-config.yaml"
+  CFG="$OUT.ue-config.yaml"
+fi
+
 TSHARK_PID="" GNB_PID="" UE_PID=""
 cleanup() {
   [[ -n "$UE_PID" ]] && sudo kill "$UE_PID" 2>/dev/null || true
@@ -30,7 +37,9 @@ cleanup() {
 }
 trap cleanup EXIT
 
-sudo tshark -q -i lo -f "sctp port 38412 or tcp port 7777" -w "$OUT.pcap" >/dev/null 2>&1 &
+# dumpcap running as root cannot open files in the home directory, so it writes to stdout.
+# shellcheck disable=SC2024  # intended: the redirect runs as our user
+sudo tshark -q -i lo -f "sctp port 38412 or tcp port 7777" -w - >"$OUT.pcap" 2>/dev/null &
 TSHARK_PID=$!
 sleep 1.5
 
@@ -52,7 +61,13 @@ done
 ping_result="skipped"
 if [[ "$ok" -eq 1 && "$PING" -eq 1 ]]; then
   sleep 1
-  if ping -I uesimtun0 -c 3 -W 2 10.45.0.1 >"$OUT.ping.log" 2>&1; then ping_result="ok"; else ping_result="failed"; fi
+  ns="$(ip netns list | awk '/ueransim/ {print $1; exit}')"
+  # shellcheck disable=SC2024  # the log file is ours
+  if [[ -n "$ns" ]] && sudo ip netns exec "$ns" ping -I uesimtun0 -c 3 -W 2 10.45.0.1 >"$OUT.ping.log" 2>&1; then
+    ping_result="ok"
+  else
+    ping_result="failed"
+  fi
 fi
 sleep 1  # let the last SBI/NGAP messages reach the capture
 echo "ue_config=$CFG n=$N sessions_ok=$done_count/$N success=$ok ping=$ping_result" | tee "$OUT.status"

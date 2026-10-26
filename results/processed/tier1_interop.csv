@@ -1,0 +1,3 @@
+capture,nas_scheme_id,nas_pki,nas_msin_in_clear,nas_scheme_output_bytes,sbi_suci_chars,sbi_suci,recovered_imsi,status,match,nas_equals_sbi
+null.pcap,0,0,0000000001,0,33,suci-0-999-70-0000-0-0-0000000001,999700000000001,ok,True,True
+profileA.pcap,1,1,,45,113,suci-0-999-70-0000-1-1-559c9c11d1a36af1071d4603a892d08e51baed8ab138c0eb68fb4921885dd86f84ccc2b17f63e220c5661f5f36,999700000000001,ok,True,True
