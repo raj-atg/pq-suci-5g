@@ -76,12 +76,25 @@ def sidf_capacity() -> None:
     ):
         wc, ws = csv.writer(fc), csv.writer(fs)
         wc.writerow(
-            ["impl", "scheme", "c", "service_time_us", "arrival_rate_per_s", "utilization",
-             "mean_response_ms"]
+            [
+                "impl",
+                "scheme",
+                "c",
+                "service_time_us",
+                "arrival_rate_per_s",
+                "utilization",
+                "mean_response_ms",
+            ]
         )
         ws.writerow(
-            ["impl", "scheme", "c", "service_time_us", "saturation_rate_per_s",
-             "rate_at_W_eq_10ms_per_s"]
+            [
+                "impl",
+                "scheme",
+                "c",
+                "service_time_us",
+                "saturation_rate_per_s",
+                "rate_at_W_eq_10ms_per_s",
+            ]
         )
         for scheme in SCHEMES:
             s = mean_us[scheme] * 1e-6
@@ -91,23 +104,53 @@ def sidf_capacity() -> None:
                 ok: list[float] = []
                 for lam in grid:
                     w_ms = (erlang_c_wait(float(lam), s, c) + s) * 1e3
-                    wc.writerow(["python", scheme, c, f"{s * 1e6:.3f}", f"{lam:.6g}",
-                                 f"{lam * s / c:.6f}", f"{w_ms:.6f}"])
+                    wc.writerow(
+                        [
+                            "python",
+                            scheme,
+                            c,
+                            f"{s * 1e6:.3f}",
+                            f"{lam:.6g}",
+                            f"{lam * s / c:.6f}",
+                            f"{w_ms:.6f}",
+                        ]
+                    )
                     if w_ms <= W_TARGET_MS:
                         ok.append(float(lam))
-                ws.writerow(["python", scheme, c, f"{s * 1e6:.3f}", f"{sat:.6g}",
-                             f"{max(ok):.6g}" if ok else ""])
+                ws.writerow(
+                    [
+                        "python",
+                        scheme,
+                        c,
+                        f"{s * 1e6:.3f}",
+                        f"{sat:.6g}",
+                        f"{max(ok):.6g}" if ok else "",
+                    ]
+                )
 
 
 def airtime() -> None:
     """Write the extra uplink airtime per scheme, PRB grant and modulation."""
-    size = {r["scheme"]: int(r["scheme_output_bytes"]) for r in read_csv(PROC / "e2_sizes_computed.csv")}
+    size = {
+        r["scheme"]: int(r["scheme_output_bytes"]) for r in read_csv(PROC / "e2_sizes_computed.csv")
+    }
     with (PROC / "e5_airtime.csv").open("w", newline="") as f:
         w = csv.writer(f)
         w.writerow(
-            ["scheme", "extra_bytes_vs_profile_a", "extra_bytes_vs_null", "prbs", "modulation",
-             "qm", "code_rate", "bits_per_slot", "extra_slots_vs_profile_a",
-             "extra_time_ms_vs_profile_a", "extra_slots_vs_null", "extra_time_ms_vs_null"]
+            [
+                "scheme",
+                "extra_bytes_vs_profile_a",
+                "extra_bytes_vs_null",
+                "prbs",
+                "modulation",
+                "qm",
+                "code_rate",
+                "bits_per_slot",
+                "extra_slots_vs_profile_a",
+                "extra_time_ms_vs_profile_a",
+                "extra_slots_vs_null",
+                "extra_time_ms_vs_null",
+            ]
         )
         for scheme in SCHEMES:
             xa, xn = size[scheme] - size["profile-a"], size[scheme] - size["null"]
@@ -116,8 +159,22 @@ def airtime() -> None:
                     bps = prbs * 12 * 12 * qm * rate
                     sa = max(0, math.ceil(xa * 8 / bps))
                     sn = max(0, math.ceil(xn * 8 / bps))
-                    w.writerow([scheme, xa, xn, prbs, mod, qm, rate, f"{bps:.1f}", sa,
-                                f"{sa * SLOT_MS:.1f}", sn, f"{sn * SLOT_MS:.1f}"])
+                    w.writerow(
+                        [
+                            scheme,
+                            xa,
+                            xn,
+                            prbs,
+                            mod,
+                            qm,
+                            rate,
+                            f"{bps:.1f}",
+                            sa,
+                            f"{sa * SLOT_MS:.1f}",
+                            sn,
+                            f"{sn * SLOT_MS:.1f}",
+                        ]
+                    )
     (PROC / "e5_airtime_notes.txt").write_text(AIRTIME_NOTES)
 
 

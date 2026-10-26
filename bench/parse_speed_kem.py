@@ -1,4 +1,4 @@
-"""Parse liboqs speed_kem output into a CSV (impl,scheme,operation,iterations,mean_us,cycles_mean)."""
+"""Parse liboqs speed_kem output into a CSV of per-operation timings."""
 
 from __future__ import annotations
 

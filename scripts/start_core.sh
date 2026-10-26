@@ -26,9 +26,12 @@ sudo ip link set ogstun up
 
 # Render configs.
 for nf in "${NFS[@]}"; do
-  sed -e "s|@RUNTIME@|$RUNTIME|g" -e "s|@KEYS@|$KEYS|g" \
-    "$ROOT/config/open5gs/$nf.yaml" > "$RUNTIME/open5gs/$nf.yaml"
+  src="$ROOT/config/open5gs/$nf.yaml"
+  [[ -n "$CONFIG_SUFFIX" && -f "$ROOT/config/open5gs/$nf$CONFIG_SUFFIX.yaml" ]] \
+    && src="$ROOT/config/open5gs/$nf$CONFIG_SUFFIX.yaml"
+  sed -e "s|@RUNTIME@|$RUNTIME|g" -e "s|@KEYS@|$KEYS|g" "$src" > "$RUNTIME/open5gs/$nf.yaml"
 done
+echo "$CORE" > "$RUNTIME/core_variant"
 
 start_nf() {
   local nf="$1" pidf="$RUNTIME/pid/$1.pid"
@@ -52,4 +55,4 @@ sleep 3
 for nf in "${NFS[@]}"; do
   is_running "$RUNTIME/pid/$nf.pid" || { echo "ERROR: $nf did not start, see $RUNTIME/log/$nf.stdout" >&2; exit 1; }
 done
-echo "core up: ${NFS[*]} (logs in $RUNTIME/log)"
+echo "core up ($CORE, $O5GS_PREFIX): ${NFS[*]} (logs in $RUNTIME/log)"

@@ -13,7 +13,7 @@ import subprocess
 import sys
 import time
 from collections.abc import Callable
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from importlib import metadata
 from pathlib import Path
 
@@ -81,15 +81,16 @@ def sh(cmd: str) -> str:
 
 def write_env(path: Path, pre_load: str) -> None:
     """Write environment details, including load recorded before the run started."""
+    cpu_model = sh("lscpu").split("Model name:")[1].splitlines()[0].strip()
     lines = [
-        f"cpu_model: {sh('lscpu | grep -m1 \"Model name\" | sed \"s/.*: *//\"')}",
+        f"cpu_model: {cpu_model}",
         f"nproc: {sh('nproc')}",
         f"kernel: {platform.release()}",
         f"python: {sys.version.split()[0]}",
         f"cryptography: {metadata.version('cryptography')}",
         f"liboqs-python: {metadata.version('liboqs-python')}",
         f"liboqs: {oqs.oqs_version()}",
-        f"date_utc: {datetime.now(timezone.utc).isoformat()}",
+        f"date_utc: {datetime.now(UTC).isoformat()}",
         f"command: {shlex.join([sys.executable, *sys.argv])}",
         "",
         pre_load,
@@ -105,8 +106,11 @@ def main() -> None:
 
     RAW_DIR.mkdir(parents=True, exist_ok=True)
     PROC_DIR.mkdir(parents=True, exist_ok=True)
-    pre = "uptime: " + sh("uptime") + "\nps top5 by cpu before run:\n" + sh(
-        "ps -eo comm,%cpu --sort=-%cpu | head -5"
+    pre = (
+        "uptime: "
+        + sh("uptime")
+        + "\nps top5 by cpu before run:\n"
+        + sh("ps -eo comm,%cpu --sort=-%cpu | head -5")
     )
     write_env(RAW_DIR / "env.txt", pre)
 
@@ -116,12 +120,25 @@ def main() -> None:
     ):
         rw, pw = csv.writer(raw), csv.writer(proc)
         rw.writerow(["scheme", "operation", "iteration", "ns"])
-        pw.writerow(["impl", "scheme", "operation", "n", "median_us", "p95_us", "mean_us", "std_us"])
+        pw.writerow(
+            ["impl", "scheme", "operation", "n", "median_us", "p95_us", "mean_us", "std_us"]
+        )
         for name in SCHEME_ORDER:
             for op, ns in bench_scheme(name, args.iterations).items():
                 rw.writerows((name, op, i, v) for i, v in enumerate(ns))
                 med, p95, mean, std = summarize(ns)
-                pw.writerow(["python", name, op, len(ns), f"{med:.3f}", f"{p95:.3f}", f"{mean:.3f}", f"{std:.3f}"])
+                pw.writerow(
+                    [
+                        "python",
+                        name,
+                        op,
+                        len(ns),
+                        f"{med:.3f}",
+                        f"{p95:.3f}",
+                        f"{mean:.3f}",
+                        f"{std:.3f}",
+                    ]
+                )
                 print(f"{name:10s} {op:10s} median {med:10.2f} us")
 
 

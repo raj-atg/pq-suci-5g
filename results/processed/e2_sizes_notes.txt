@@ -1,0 +1,8 @@
+E2 computed sizes: notes
+hn_public_key_bytes: length of the public key from the scheme keygen (null: 0).
+scheme_output_bytes: length of conceal output for a 10-digit MSIN (null: 5 bytes BCD).
+suci_string_chars: len(conceal_imsi(IMSI 999700000000001, mnc_len=2, key_id=1).to_string()).
+  mlkem512 and mlkem1024 have no scheme id (benchmark only): placeholder scheme id 12 is used
+  to build the string, so only the length is an estimate (scheme_id column is -1).
+nas_mobile_identity_bytes = 2 (LV-E length octets) + 8 (SUCI header: type 1, MCC/MNC 3,
+  routing indicator 2, scheme id 1, key id 1) + scheme_output_bytes. No IEI octet.

@@ -1,0 +1,70 @@
+# command (per algorithm): ~/pq-suci-5g/third_party/liboqs/build/tests/speed_kem --duration 3 <alg>
+Configuration info
+==================
+Target platform:  x86_64-Linux-6.18.54.1-microsoft-standard-WSL2
+Compiler:         gcc (15.2.0)
+Compile options:  [-Wa,--noexecstack;-fomit-frame-pointer;-fdata-sections;-ffunction-sections;-Wl,--gc-sections;-Wbad-function-cast]
+OQS version:      0.16.0 (major: 0, minor: 16, patch: 0)
+Git commit:       5a1a854b0dc9f2141bdc771c555ee60c37950183
+OpenSSL enabled:  Yes (OpenSSL 3.5.5 27 Jan 2026)
+AES:              NI
+SHA-2:            OpenSSL
+SHA-3:            AVX512VL
+OQS build flags:  BUILD_SHARED_LIBS OQS_DIST_BUILD OQS_LIBJADE_BUILD OQS_OPT_TARGET=generic CMAKE_BUILD_TYPE=Release 
+CPU exts active:  ADX AES AVX AVX2 AVX512 BMI1 BMI2 PCLMULQDQ VPCLMULQDQ POPCNT SSE SSE2 SSE3
+Speed test
+==========
+Started at 2026-10-26 16:00:06
+Operation                            | Iterations | Total time (s) | Time (us): mean | pop. stdev | CPU cycles: mean          | pop. stdev
+------------------------------------ | ----------:| --------------:| ---------------:| ----------:| -------------------------:| ----------:
+ML-KEM-512                           |            |                |                 |            |                           |           
+keygen                               |     161280 |          3.003 |          18.618 |    190.211 |                     22023 |     225611
+encaps                               |     170547 |          3.000 |          17.590 |    132.270 |                     20846 |     157118
+decaps                               |     130828 |          3.003 |          22.957 |    193.274 |                     27237 |     229711
+Ended at 2026-10-26 16:00:15
+Configuration info
+==================
+Target platform:  x86_64-Linux-6.18.54.1-microsoft-standard-WSL2
+Compiler:         gcc (15.2.0)
+Compile options:  [-Wa,--noexecstack;-fomit-frame-pointer;-fdata-sections;-ffunction-sections;-Wl,--gc-sections;-Wbad-function-cast]
+OQS version:      0.16.0 (major: 0, minor: 16, patch: 0)
+Git commit:       5a1a854b0dc9f2141bdc771c555ee60c37950183
+OpenSSL enabled:  Yes (OpenSSL 3.5.5 27 Jan 2026)
+AES:              NI
+SHA-2:            OpenSSL
+SHA-3:            AVX512VL
+OQS build flags:  BUILD_SHARED_LIBS OQS_DIST_BUILD OQS_LIBJADE_BUILD OQS_OPT_TARGET=generic CMAKE_BUILD_TYPE=Release 
+CPU exts active:  ADX AES AVX AVX2 AVX512 BMI1 BMI2 PCLMULQDQ VPCLMULQDQ POPCNT SSE SSE2 SSE3
+Speed test
+==========
+Started at 2026-10-26 16:00:15
+Operation                            | Iterations | Total time (s) | Time (us): mean | pop. stdev | CPU cycles: mean          | pop. stdev
+------------------------------------ | ----------:| --------------:| ---------------:| ----------:| -------------------------:| ----------:
+ML-KEM-768                           |            |                |                 |            |                           |           
+keygen                               |     122527 |          3.000 |          24.485 |    161.168 |                     29052 |     191728
+encaps                               |     103419 |          3.002 |          29.027 |    208.852 |                     34299 |     246485
+decaps                               |      91063 |          3.000 |          32.944 |    204.566 |                     39030 |     242691
+Ended at 2026-10-26 16:00:24
+Configuration info
+==================
+Target platform:  x86_64-Linux-6.18.54.1-microsoft-standard-WSL2
+Compiler:         gcc (15.2.0)
+Compile options:  [-Wa,--noexecstack;-fomit-frame-pointer;-fdata-sections;-ffunction-sections;-Wl,--gc-sections;-Wbad-function-cast]
+OQS version:      0.16.0 (major: 0, minor: 16, patch: 0)
+Git commit:       5a1a854b0dc9f2141bdc771c555ee60c37950183
+OpenSSL enabled:  Yes (OpenSSL 3.5.5 27 Jan 2026)
+AES:              NI
+SHA-2:            OpenSSL
+SHA-3:            AVX512VL
+OQS build flags:  BUILD_SHARED_LIBS OQS_DIST_BUILD OQS_LIBJADE_BUILD OQS_OPT_TARGET=generic CMAKE_BUILD_TYPE=Release 
+CPU exts active:  ADX AES AVX AVX2 AVX512 BMI1 BMI2 PCLMULQDQ VPCLMULQDQ POPCNT SSE SSE2 SSE3
+Speed test
+==========
+Started at 2026-10-26 16:00:24
+Operation                            | Iterations | Total time (s) | Time (us): mean | pop. stdev | CPU cycles: mean          | pop. stdev
+------------------------------------ | ----------:| --------------:| ---------------:| ----------:| -------------------------:| ----------:
+ML-KEM-1024                          |            |                |                 |            |                           |           
+keygen                               |      89722 |          3.000 |          33.437 |    208.823 |                     39705 |     248520
+encaps                               |      74658 |          3.000 |          40.183 |    254.777 |                     47705 |     303037
+decaps                               |      62900 |          3.000 |          47.695 |    324.846 |                     56516 |     384980
+Ended at 2026-10-26 16:00:33

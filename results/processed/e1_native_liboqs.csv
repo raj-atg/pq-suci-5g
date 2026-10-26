@@ -1,0 +1,10 @@
+impl,scheme,operation,iterations,mean_us,cycles_mean
+c-liboqs,mlkem512,keygen,161280,18.618,22023
+c-liboqs,mlkem512,encaps,170547,17.590,20846
+c-liboqs,mlkem512,decaps,130828,22.957,27237
+c-liboqs,mlkem768,keygen,122527,24.485,29052
+c-liboqs,mlkem768,encaps,103419,29.027,34299
+c-liboqs,mlkem768,decaps,91063,32.944,39030
+c-liboqs,mlkem1024,keygen,89722,33.437,39705
+c-liboqs,mlkem1024,encaps,74658,40.183,47705
+c-liboqs,mlkem1024,decaps,62900,47.695,56516

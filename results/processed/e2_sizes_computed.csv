@@ -1,0 +1,8 @@
+scheme,scheme_id,hn_public_key_bytes,scheme_output_bytes,suci_string_chars,nas_mobile_identity_bytes
+null,0,0,5,33,15
+profile-a,1,32,45,113,55
+profile-b,2,33,46,115,56
+mlkem512,-1,800,781,1586,791
+mlkem768,12,1184,1101,2226,1111
+mlkem1024,-1,1568,1581,3186,1591
+hybrid,13,1216,1133,2290,1143
