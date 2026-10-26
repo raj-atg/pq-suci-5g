@@ -1,0 +1,10 @@
+E5 airtime model assumptions
+NR, 30 kHz SCS (0.5 ms slot), 1 layer, 14 OFDM symbols per slot, 12 carry data
+(2 assumed for DMRS/control), 12 subcarriers per PRB:
+  bits_per_slot = PRB * 12 * 12 * Qm * R
+No TBS quantization, no MAC/RLC/PDCP headers, no HARQ retransmissions.
+PRB grants 10, 50, 273. QPSK R=0.30, 16QAM R=0.50, 64QAM R=0.75 are illustrative
+mid-range MCS choices.
+extra_bytes = scheme_output_bytes(scheme) - scheme_output_bytes(profile-a or null);
+extra_slots = ceil(extra_bits / bits_per_slot) (0 if not positive);
+extra_time_ms = extra_slots * 0.5.

@@ -1,0 +1,16 @@
+5GS mobile identity
+Length: 1109
+0... .... = Spare: 0
+.000 .... = SUPI format: IMSI (0)
+.... 0... = Spare: 0
+.... .001 = Type of identity: SUCI (1)
+Mobile Country Code (MCC): Private network (999)
+Mobile Network Code (MNC): Unknown (70)
+Routing indicator: 0000
+.... 1100 = Protection scheme Id: Unknown (12)
+Home network public key identifier: 3
+Scheme output […]: d0e9e7067eb81eabb73b78784ff016b90f756f0f3e54dfde27670a9160760a4baa4d5e6ba690de13f3d61dc9a46b8dc59f9a4d122e0261119417a0d5226bd48489c21c16491bd329fbd7a55c3861f2a5f7bc50a0567a53df55512c095d9aadc4e6514a6daad5529662700c30f5
+UE security capability
+Element ID: 0x2e
+Length: 4
+1... .... = 5G-EA0: Supported

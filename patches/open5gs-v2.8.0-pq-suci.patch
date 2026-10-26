@@ -304,3 +304,44 @@ index 67a1bad..9e31ece 100644
      install_rpath : libdir,
      install : true)
  
+diff --git a/src/amf/context.c b/src/amf/context.c
+index 1035cf7..8ba42a4 100644
+--- a/src/amf/context.c
++++ b/src/amf/context.c
+@@ -1913,7 +1913,9 @@ amf_ue_t *amf_ue_find_by_message(ogs_nas_5gs_message_t *message)
+                 mobile_identity_suci->protection_scheme_id !=
+                     OGS_PROTECTION_SCHEME_PROFILE_A &&
+                 mobile_identity_suci->protection_scheme_id !=
+-                    OGS_PROTECTION_SCHEME_PROFILE_B) {
++                    OGS_PROTECTION_SCHEME_PROFILE_B &&
++                mobile_identity_suci->protection_scheme_id !=
++                    OGS_PROTECTION_SCHEME_PQ_MLKEM768) {
+                 ogs_error("Invalid ProtectionSchemeID(%d) in SUCI",
+                     mobile_identity_suci->protection_scheme_id);
+                 return NULL;
+diff --git a/src/amf/gmm-handler.c b/src/amf/gmm-handler.c
+index fa01e53..d5eaad0 100644
+--- a/src/amf/gmm-handler.c
++++ b/src/amf/gmm-handler.c
+@@ -160,7 +160,9 @@ ogs_nas_5gmm_cause_t gmm_handle_registration_request(amf_ue_t *amf_ue,
+             mobile_identity_suci->protection_scheme_id !=
+                 OGS_PROTECTION_SCHEME_PROFILE_A &&
+             mobile_identity_suci->protection_scheme_id !=
+-                OGS_PROTECTION_SCHEME_PROFILE_B) {
++                OGS_PROTECTION_SCHEME_PROFILE_B &&
++            mobile_identity_suci->protection_scheme_id !=
++                OGS_PROTECTION_SCHEME_PQ_MLKEM768) {
+             ogs_error("Invalid ProtectionSchemeID(%d) in SUCI",
+                 mobile_identity_suci->protection_scheme_id);
+             return OGS_5GMM_CAUSE_SEMANTICALLY_INCORRECT_MESSAGE;
+@@ -1058,7 +1060,9 @@ ogs_nas_5gmm_cause_t gmm_handle_identity_response(amf_ue_t *amf_ue,
+             mobile_identity_suci->protection_scheme_id !=
+                 OGS_PROTECTION_SCHEME_PROFILE_A &&
+             mobile_identity_suci->protection_scheme_id !=
+-                OGS_PROTECTION_SCHEME_PROFILE_B) {
++                OGS_PROTECTION_SCHEME_PROFILE_B &&
++            mobile_identity_suci->protection_scheme_id !=
++                OGS_PROTECTION_SCHEME_PQ_MLKEM768) {
+             ogs_error("Invalid ProtectionSchemeID(%d) in SUCI",
+                 mobile_identity_suci->protection_scheme_id);
+             return OGS_5GMM_CAUSE_SEMANTICALLY_INCORRECT_MESSAGE;

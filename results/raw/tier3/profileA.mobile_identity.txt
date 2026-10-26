@@ -1,0 +1,16 @@
+5GS mobile identity
+Length: 53
+0... .... = Spare: 0
+.000 .... = SUPI format: IMSI (0)
+.... 0... = Spare: 0
+.... .001 = Type of identity: SUCI (1)
+Mobile Country Code (MCC): Private network (999)
+Mobile Network Code (MNC): Unknown (70)
+Routing indicator: 0000
+.... 0001 = Protection scheme Id: ECIES scheme profile A (1)
+Home network public key identifier: 1
+Scheme output: 38d4db3a19ca8c9e34d41a4c35e05a71105cc13543db0a85a393b469ffe758343cfe7672870fac7cf10c1b0ff9
+ECC ephemeral public key: 38d4db3a19ca8c9e34d41a4c35e05a71105cc13543db0a85a393b469ffe75834
+Ciphertext: 3cfe767287
+MAC tag: 0x0fac7cf10c1b0ff9
+UE security capability

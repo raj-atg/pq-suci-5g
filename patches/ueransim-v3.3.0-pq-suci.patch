@@ -1,5 +1,5 @@
 diff --git a/src/ue.cpp b/src/ue.cpp
-index d9e3f85..addcb45 100644
+index d9e3f85..ac68cc1 100644
 --- a/src/ue.cpp
 +++ b/src/ue.cpp
 @@ -155,7 +155,7 @@ static nr::ue::UeConfig *ReadConfigYaml()
@@ -7,7 +7,7 @@ index d9e3f85..addcb45 100644
          result->homeNetworkPublicKeyId = yaml::GetInt32(config, "homeNetworkPublicKeyId", 0, 255);
      if (yaml::HasField(config, "homeNetworkPublicKey"))        
 -        result->homeNetworkPublicKey = OctetString::FromHex(yaml::GetString(config, "homeNetworkPublicKey", 64, 64)); 
-+        result->homeNetworkPublicKey = OctetString::FromHex(yaml::GetString(config, "homeNetworkPublicKey", 64, 8192)); // pq-suci-5g: was 64..64 
++        result->homeNetworkPublicKey = OctetString::FromHex(yaml::GetString(config, "homeNetworkPublicKey", 64, 8192)); // pq-suci-5g: was 64..64
      if (yaml::HasField(config, "imei"))
          result->imei = yaml::GetString(config, "imei", 15, 15);
      if (yaml::HasField(config, "imeiSv"))
@@ -26,16 +26,17 @@ index 8375939..ed0f758 100644
 +pkg_check_modules(OQS REQUIRED IMPORTED_TARGET liboqs)
 +target_link_libraries(ue OpenSSL::Crypto PkgConfig::OQS)
 diff --git a/src/ue/nas/mm/identity.cpp b/src/ue/nas/mm/identity.cpp
-index bf04c67..20579ff 100644
+index bf04c67..093b870 100644
 --- a/src/ue/nas/mm/identity.cpp
 +++ b/src/ue/nas/mm/identity.cpp
-@@ -12,6 +12,55 @@
+@@ -12,6 +12,56 @@
  // STEPHANE
  #include <iostream>
  
 +// pq-suci-5g: Profile B and post-quantum scheme 12 (research prototype)
 +#include <chrono>
 +#include <openssl/core_names.h>
++#include <openssl/ec.h>
 +#include <openssl/evp.h>
 +#include <openssl/hmac.h>
 +#include <openssl/params.h>
@@ -85,7 +86,7 @@ index bf04c67..20579ff 100644
  namespace nr::ue
  {
  
-@@ -114,7 +163,29 @@ nas::IE5gsMobileIdentity NasMm::generateSuci()
+@@ -114,7 +164,29 @@ nas::IE5gsMobileIdentity NasMm::generateSuci()
      {
          ret.imsi.protectionSchemaId = 1;
          ret.imsi.homeNetworkPublicKeyIdentifier = homeNetworkPublicKeyId;
@@ -115,7 +116,7 @@ index bf04c67..20579ff 100644
          return ret;
      }
      else
-@@ -124,6 +195,72 @@ nas::IE5gsMobileIdentity NasMm::generateSuci()
+@@ -124,6 +196,74 @@ nas::IE5gsMobileIdentity NasMm::generateSuci()
      }
  }
  
@@ -137,17 +138,19 @@ index bf04c67..20579ff 100644
 +        OSSL_PARAM_construct_octet_string(OSSL_PKEY_PARAM_PUB_KEY, const_cast<uint8_t *>(hnPublicKey.data()),
 +                                          hnPublicKey.length()),
 +        OSSL_PARAM_construct_end()};
-+    uint8_t ephPub[33], z[32];
-+    size_t ephPubLen = 0, zLen = sizeof(z);
++    uint8_t uncompressed[65], ephPub[33], z[32];
++    size_t uncompressedLen = 0, ephPubLen = sizeof(ephPub), zLen = sizeof(z);
 +
++    // OpenSSL returns the uncompressed point (04 || x || y); compress it as 02/03 || x.
 +    if (eph && pctx && EVP_PKEY_fromdata_init(pctx) == 1 &&
 +        EVP_PKEY_fromdata(pctx, &peer, EVP_PKEY_PUBLIC_KEY, params) == 1 &&
-+        EVP_PKEY_set_utf8_string_param(eph, OSSL_PKEY_PARAM_EC_POINT_CONVERSION_FORMAT, "compressed") == 1 &&
-+        EVP_PKEY_get_octet_string_param(eph, OSSL_PKEY_PARAM_ENCODED_PUBLIC_KEY, ephPub, sizeof(ephPub),
-+                                        &ephPubLen) == 1 &&
-+        ephPubLen == 33 && (dctx = EVP_PKEY_CTX_new(eph, nullptr)) && EVP_PKEY_derive_init(dctx) == 1 &&
++        EVP_PKEY_get_octet_string_param(eph, OSSL_PKEY_PARAM_ENCODED_PUBLIC_KEY, uncompressed,
++                                        sizeof(uncompressed), &uncompressedLen) == 1 &&
++        uncompressedLen == 65 && (dctx = EVP_PKEY_CTX_new(eph, nullptr)) && EVP_PKEY_derive_init(dctx) == 1 &&
 +        EVP_PKEY_derive_set_peer(dctx, peer) == 1 && EVP_PKEY_derive(dctx, z, &zLen) == 1 && zLen == 32)
 +    {
++        ephPub[0] = 0x02 | (uncompressed[64] & 1);
++        memcpy(ephPub + 1, uncompressed + 1, 32);
 +        OctetString msin;
 +        nas::EncodeBcdString(msin, msinDigits, ~0, false, 0);
 +        OctetString schemeOutput = OctetString::FromArray(ephPub, ephPubLen);
