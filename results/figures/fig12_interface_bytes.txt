@@ -1,0 +1,1 @@
+Application payload bytes per interface for one registration, Profile A versus scheme 12, on the six largest interfaces (stack_interface_bytes.csv). Increases from Profile A to scheme 12: N2 gNB-AMF +2,117 B; SBI AUSF +2,113 B; SBI UDM +1,541 B. SBI NRF is excluded because NRF heartbeats vary between runs.

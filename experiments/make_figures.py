@@ -647,6 +647,9 @@ def main() -> None:
     style()
     for fn in FIGURES:
         fn()
+    import stack_figures
+
+    stack_figures.main()
 
 
 if __name__ == "__main__":

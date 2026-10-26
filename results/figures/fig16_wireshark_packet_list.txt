@@ -1,0 +1,1 @@
+First 20 packets of a scheme 12 registration captured on lo, in the style of the Wireshark packet list (wireshark_packet_list.csv). Orange rows carry the SUCI (InitialUEMessage and the SBI requests whose URI contains it); blue rows are NGAP and gray rows are HTTP/2. The Info column is truncated to 60 characters.

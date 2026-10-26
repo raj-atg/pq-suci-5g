@@ -1,0 +1,1 @@
+The first 22 messages of one scheme 12 registration, up to the InitialContextSetup that completes it, reconstructed from a tshark capture; later PDU session messages are not shown. Rows are ordered by message, not by time, with the capture time at the left. SBI requests pass through the SCP (omitted for clarity) and only requests are shown.

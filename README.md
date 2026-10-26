@@ -147,6 +147,24 @@ In short:
 
 Fig. 8 is the registration sequence diagram in [docs/09](docs/09-technical-deep-dive.md#71-where-the-suci-travels).
 
+### Testbed evidence: Open5GS, UERANSIM and Wireshark/tshark
+
+Generated from the real captures and logs of the runs; explained in
+[docs/11-testbed-evidence.md](docs/11-testbed-evidence.md).
+
+| | |
+|---|---|
+| ![Testbed topology](results/figures/fig10_testbed.png) | ![Message sequence from a capture](results/figures/fig11_message_sequence.png) |
+| Fig. 10: deployed testbed (Open5GS NFs, UERANSIM gNB and UE) | Fig. 11: one scheme 12 registration through Open5GS |
+| ![Bytes per interface](results/figures/fig12_interface_bytes.png) | ![UERANSIM UE and gNB timeline](results/figures/fig13_ue_gnb_timeline.png) |
+| Fig. 12: bytes per interface and scheme | Fig. 13: registration phases seen by the UERANSIM UE |
+| ![Storm progress](results/figures/fig14_storm_progress.png) | ![Log evidence](results/figures/fig15_log_evidence.png) |
+| Fig. 14: 100 UEs registered by the AMF over time | Fig. 15: Open5GS and UERANSIM log lines |
+| ![tshark packet list](results/figures/fig16_wireshark_packet_list.png) | ![Protocol hierarchy](results/figures/fig17_protocol_hierarchy.png) |
+| Fig. 16: tshark packet list of the registration | Fig. 17: tshark protocol hierarchy per scheme |
+| ![I/O graph](results/figures/fig18_io_graph.png) | |
+| Fig. 18: Wireshark-style I/O graph of the storms | |
+
 ## Documentation
 
 - [01 5G architecture](docs/01-5g-architecture.md)
@@ -159,6 +177,7 @@ Fig. 8 is the registration sequence diagram in [docs/09](docs/09-technical-deep-
 - [08 Limitations and lab plan](docs/08-limitations-and-lab.md)
 - [09 Technical deep dive: cryptography, 5G integration, prior work and findings](docs/09-technical-deep-dive.md)
 - [10 Real-world deployment: what blocks it and migration paths](docs/10-real-world-deployment.md)
+- [11 The testbed in action: Open5GS, UERANSIM and Wireshark/tshark](docs/11-testbed-evidence.md)
 - [Glossary](docs/glossary.md)
 - [Decisions](docs/decisions.md)
 - [Versions](docs/versions.md)

@@ -1,0 +1,45 @@
+interface,src,dst,label,carries_suci,t_ms
+N2 (NGAP/SCTP),gNB,AMF,InitialUEMessage,True,0.0
+SBI (HTTP/2) to AUSF,AMF,AUSF,nausf-auth ue-authentications,True,1.054
+SBI (HTTP/2) to UDM,AUSF,UDM,nudm-ueau generate-auth-data,True,1.743
+SBI (HTTP/2) to UDR,UDM,UDR,nudr-dr authentication-subscription,False,2.54
+N2 (NGAP/SCTP),AMF,gNB,DownlinkNASTransport,False,5.163
+N2 (NGAP/SCTP),gNB,AMF,UplinkNASTransport,False,6.311
+SBI (HTTP/2) to AUSF,AMF,AUSF,nausf-auth 5g-aka-confirmation,False,6.961
+SBI (HTTP/2) to UDM,AUSF,UDM,nudm-ueau auth-events,False,7.525
+SBI (HTTP/2) to UDR,UDM,UDR,nudr-dr authentication-status,False,7.995
+N2 (NGAP/SCTP),AMF,gNB,DownlinkNASTransport,False,11.404
+N2 (NGAP/SCTP),gNB,AMF,UplinkNASTransport,False,12.921
+SBI (HTTP/2) to UDM,AMF,UDM,nudm-uecm amf-3gpp-access,False,14.258
+SBI (HTTP/2) to UDR,UDM,UDR,nudr-dr amf-3gpp-access,False,14.99
+SBI (HTTP/2) to UDM,AMF,UDM,nudm-sdm am-data?plmn-id=%7B%22mcc%22,False,18.999
+SBI (HTTP/2) to UDR,UDM,UDR,nudr-dr am-data,False,19.831
+SBI (HTTP/2) to UDM,AMF,UDM,nudm-sdm smf-select-data?plmn-id=%7B%,False,23.706
+SBI (HTTP/2) to UDR,UDM,UDR,nudr-dr smf-selection-subscription-d,False,24.234
+SBI (HTTP/2) to UDM,AMF,UDM,nudm-sdm ue-context-in-smf-data?plmn-,False,26.319
+SBI (HTTP/2) to UDM,AMF,UDM,nudm-sdm sdm-subscriptions,False,27.037
+SBI (HTTP/2) to PCF,AMF,PCF,npcf-am-policy-control policies,False,28.644
+SBI (HTTP/2) to UDR,PCF,UDR,nudr-dr am-data,False,29.298
+N2 (NGAP/SCTP),AMF,gNB,InitialContextSetup,False,256.775
+N2 (NGAP/SCTP),gNB,AMF,UplinkNASTransport,False,460.319
+N2 (NGAP/SCTP),gNB,AMF,UplinkNASTransport,False,460.319
+N2 (NGAP/SCTP),AMF,gNB,DownlinkNASTransport,False,460.597
+SBI (HTTP/2) to SMF,AMF,SMF,nsmf-pdusession modify,False,461.201
+SBI (HTTP/2) to PCF,SMF,PCF,npcf-smpolicycontrol delete,False,462.149
+SBI (HTTP/2) to BSF,PCF,BSF,nbsf-management 1,False,462.695
+SBI (HTTP/2) to UDM,AMF,UDM,nudm-sdm 031e7e48-d158-41f1-bc77-e5a7,False,463.797
+SBI (HTTP/2) to UDM,SMF,UDM,nudm-uecm 1,False,464.5
+SBI (HTTP/2) to UDR,UDM,UDR,nudr-dr 1,False,464.882
+SBI (HTTP/2) to SMF,AMF,SMF,nsmf-pdusession sm-contexts,False,466.473
+SBI (HTTP/2) to UDM,SMF,UDM,nudm-sdm sm-data?single-nssai=%7B%22s,False,467.163
+SBI (HTTP/2) to UDR,UDM,UDR,nudr-dr sm-data?single-nssai=%7B%22s,False,467.602
+SBI (HTTP/2) to UDM,AMF,UDM,nudm-sdm sdm-subscriptions,False,470.044
+SBI (HTTP/2) to PCF,SMF,PCF,npcf-smpolicycontrol sm-policies,False,471.47
+SBI (HTTP/2) to UDR,PCF,UDR,nudr-dr sm-data?dnn=internet&snssai=,False,472.279
+SBI (HTTP/2) to BSF,PCF,BSF,nbsf-management pcfBindings,False,474.209
+SBI (HTTP/2) to AMF,SMF,AMF,namf-comm n1-n2-messages,False,477.7
+N2 (NGAP/SCTP),AMF,gNB,PDUSessionResourceSetup,False,478.091
+SBI (HTTP/2) to SMF,AMF,SMF,nsmf-pdusession modify,False,479.697
+SBI (HTTP/2) to UDM,SMF,UDM,nudm-uecm 1,False,480.74
+SBI (HTTP/2) to UDR,UDM,UDR,nudr-dr 1,False,481.338
+SBI (HTTP/2) to SMF,AMF,SMF,nsmf-pdusession modify,False,5133.025

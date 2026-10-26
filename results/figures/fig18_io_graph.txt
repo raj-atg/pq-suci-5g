@@ -1,0 +1,1 @@
+Wireshark-style I/O graph of the 100-UE registration storms: NGAP (N2) packets per 100 ms bin for Profile A and scheme 12, from wireshark_io_graph.csv; empty bins are drawn as zero. Total NGAP packets in the capture: Profile A (1) 1,113; Scheme 12 (ML-KEM-768) 1,149.

@@ -1,0 +1,68 @@
+scheme,component,event,t_ms
+null,gNB,NG Setup procedure is successful,-988.0
+null,UE,MM-DEREGISTERED/PLMN-SEARCH,0.0
+null,UE,MM-DEREGISTERED/PS,1.0
+null,UE,MM-DEREGISTERED/NORMAL-SERVICE,1.0
+null,UE,Sending Initial Registration,1.0
+null,UE,MM-REGISTER-INITIATED,1.0
+null,gNB,RRC Setup for UE[1],1.0
+null,UE,RRC-CONNECTED,2.0
+null,UE,CM-CONNECTED,2.0
+null,gNB,Initial NAS message received from UE[1],2.0
+null,gNB,Initial Context Setup Request received,74.0
+null,UE,Registration accept received,75.0
+null,UE,MM-REGISTERED/NORMAL-SERVICE,75.0
+null,UE,PDU Session establishment is successful,302.0
+null,gNB,PDU session resource(s) setup,302.0
+null,UE,TUN uesimtun0 up,391.0
+profileA,gNB,NG Setup procedure is successful,-1004.0
+profileA,UE,MM-DEREGISTERED/PLMN-SEARCH,0.0
+profileA,UE,MM-DEREGISTERED/PS,1.0
+profileA,UE,MM-DEREGISTERED/NORMAL-SERVICE,1.0
+profileA,UE,Sending Initial Registration,1.0
+profileA,UE,SUCI computed (scheme 1),11.0
+profileA,UE,MM-REGISTER-INITIATED,11.0
+profileA,gNB,RRC Setup for UE[1],11.0
+profileA,UE,RRC-CONNECTED,12.0
+profileA,UE,CM-CONNECTED,12.0
+profileA,gNB,Initial NAS message received from UE[1],12.0
+profileA,gNB,Initial Context Setup Request received,39.0
+profileA,UE,Registration accept received,40.0
+profileA,UE,MM-REGISTERED/NORMAL-SERVICE,40.0
+profileA,UE,PDU Session establishment is successful,259.0
+profileA,gNB,PDU session resource(s) setup,259.0
+profileA,UE,TUN uesimtun0 up,338.0
+profileB,gNB,NG Setup procedure is successful,-1082.0
+profileB,UE,MM-DEREGISTERED/PLMN-SEARCH,0.0
+profileB,UE,MM-DEREGISTERED/PS,4.0
+profileB,UE,MM-DEREGISTERED/NORMAL-SERVICE,5.0
+profileB,UE,Sending Initial Registration,5.0
+profileB,UE,SUCI computed (scheme 2),10.0
+profileB,UE,MM-REGISTER-INITIATED,11.0
+profileB,gNB,RRC Setup for UE[1],11.0
+profileB,UE,RRC-CONNECTED,12.0
+profileB,UE,CM-CONNECTED,12.0
+profileB,gNB,Initial NAS message received from UE[1],12.0
+profileB,gNB,Initial Context Setup Request received,122.0
+profileB,UE,Registration accept received,123.0
+profileB,UE,MM-REGISTERED/NORMAL-SERVICE,123.0
+profileB,UE,PDU Session establishment is successful,422.0
+profileB,gNB,PDU session resource(s) setup,422.0
+profileB,UE,TUN uesimtun0 up,2225.0
+pq,gNB,NG Setup procedure is successful,-1004.0
+pq,UE,MM-DEREGISTERED/PLMN-SEARCH,0.0
+pq,UE,MM-DEREGISTERED/PS,1.0
+pq,UE,MM-DEREGISTERED/NORMAL-SERVICE,1.0
+pq,UE,Sending Initial Registration,1.0
+pq,UE,SUCI computed (scheme 12),3.0
+pq,UE,MM-REGISTER-INITIATED,3.0
+pq,UE,RRC-CONNECTED,4.0
+pq,UE,CM-CONNECTED,4.0
+pq,gNB,RRC Setup for UE[1],4.0
+pq,gNB,Initial NAS message received from UE[1],4.0
+pq,UE,Registration accept received,262.0
+pq,UE,MM-REGISTERED/NORMAL-SERVICE,262.0
+pq,gNB,Initial Context Setup Request received,262.0
+pq,UE,PDU Session establishment is successful,484.0
+pq,gNB,PDU session resource(s) setup,484.0
+pq,UE,TUN uesimtun0 up,567.0

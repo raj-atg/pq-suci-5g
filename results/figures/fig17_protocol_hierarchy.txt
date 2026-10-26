@@ -1,0 +1,1 @@
+Bytes per protocol from `tshark -z io,phs` on one registration capture per scheme (wireshark_protocol_hierarchy.csv), Profile A versus scheme 12; the two panels use separate y axes. The HTTP/2 totals also include NRF heartbeat traffic, which varies between runs, so only the NGAP difference is clean here (+2,104 B for scheme 12).

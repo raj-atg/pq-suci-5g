@@ -1,0 +1,1 @@
+Excerpts of the UERANSIM and Open5GS logs for one scheme 12 registration, taken from results/raw/stack/log_excerpts.txt. Highlighted lines show the UE concealing the SUCI and the UDM SIDF deconcealing it with ML-KEM-768; lines are truncated to 120 characters.

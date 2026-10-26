@@ -1,0 +1,1 @@
+Phases of one scheme 12 registration from the UERANSIM UE log (stack_ue_events.csv). The UE computed the post-quantum SUCI 3 ms after start; almost all of the time until the Registration Accept (262 ms) is spent in the core and in protocol timers, not in the SUCI.

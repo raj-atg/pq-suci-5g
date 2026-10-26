@@ -1,0 +1,18 @@
+== UERANSIM gnb.log
+UERANSIM v3.3.0
+[2026-10-26 16:12:23.741] [ngap] [info] NG Setup procedure is successful
+[2026-10-26 16:12:24.749] [ngap] [debug] Initial NAS message received from UE[1]
+== UERANSIM ue.log
+UERANSIM v3.3.0
+[2026-10-26 16:12:24.748] [nas] [info] [SUCI] scheme=12 output_bytes=1101 conceal_us=1766.9
+[2026-10-26 16:12:25.007] [nas] [info] Initial Registration is successful
+[2026-10-26 16:12:25.229] [nas] [info] PDU Session establishment is successful PSI[1]
+[2026-10-26 16:12:25.312] [app] [info] Connection setup for PDU session[1] is successful, TUN interface[uesimtun0, 10.45.0.3] is up in namespace[ueran
+== amf.log
+Open5GS daemon v2.8.0
+10/26 16:12:24.750: [amf] INFO: InitialUEMessage (../src/amf/ngap-handler.c:668)
+10/26 16:12:24.750: [gmm] INFO: Registration request (../src/amf/gmm-sm.c:1678)
+== udm.log
+Open5GS daemon v2.8.0
+10/26 16:06:56.919: [sbi] INFO: hnet[3]: ML-KEM-768 secret key loaded (2400 bytes) (../lib/sbi/context.c:759)
+10/26 16:12:24.752: [sbi] INFO: [SIDF] scheme=12 suci_len=2226 supi=imsi-999700000000001 deconceal_us=187.0 (../lib/sbi/conv.c:387)

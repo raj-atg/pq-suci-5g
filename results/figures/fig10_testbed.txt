@@ -1,0 +1,1 @@
+Deployed testbed: UERANSIM v3.3.0 (UE and gNB) in front of an Open5GS v2.8.0 5G SA core, all on one host with SBI addresses read from config/open5gs. The vermillion path is the one the SUCI takes from the UE to the SIDF in the UDM; the SMF and UPF are shown for the user plane and the remaining NFs in gray.
