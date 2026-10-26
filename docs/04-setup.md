@@ -76,6 +76,14 @@ make core-down
 
 Open a `.pcap` in Wireshark to see NGAP and SBI messages. `make clean-runtime` removes `runtime/`.
 
+## Cleaning up the host
+
+`make clean-host` stops the core and runs `scripts/cleanup_host.sh` (needs sudo). It removes the
+policy routing rules that UERANSIM adds for every UE tunnel and never removes (after the full
+experiment set there were over a thousand), the `ogstun` interface, and `/etc/iproute2/` if it
+only holds the distro default `rt_tables` plus UERANSIM's entries. The `ogstun` interface also
+disappears when WSL restarts.
+
 ## Common errors and fixes
 
 | Problem | Cause and fix |

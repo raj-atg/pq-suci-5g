@@ -5,7 +5,7 @@ PY := $(VENV)/bin/python
 export OQS_INSTALL_PATH := $(CURDIR)/third_party/install/liboqs
 
 .PHONY: help setup build venv keys core-up core-down subscribers test lint bench \
-	experiments figures export-figures all clean-runtime
+	experiments figures export-figures all clean-runtime clean-host
 
 help:  ## Show this help
 	@grep -hE '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-16s %s\n", $$1, $$2}'
@@ -61,3 +61,7 @@ all: keys test bench experiments figures  ## Reproduce all results and figures
 
 clean-runtime:  ## Remove runtime data (logs, MongoDB data) created by the core scripts
 	rm -rf runtime
+
+clean-host:  ## Remove host changes after testing: UE ip rules, ogstun, /etc/iproute2 (needs sudo)
+	scripts/stop_core.sh
+	scripts/cleanup_host.sh
