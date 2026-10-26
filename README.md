@@ -145,7 +145,11 @@ In short:
 | ![Uplink airtime](results/figures/fig7_airtime.png) | ![Null vs scheme 12 on the wire](results/figures/fig9_wireshark_compare.png) |
 | Fig. 7: extra uplink airtime (model) | Fig. 9: what an eavesdropper sees |
 
-Fig. 8 is the registration sequence diagram in [docs/09](docs/09-technical-deep-dive.md#71-where-the-suci-travels).
+![Registration sequence](results/figures/fig8_registration_sequence.png)
+
+Fig. 8: registration sequence, from the UE creating the SUCI to the SIDF de-concealing it
+([docs/09](docs/09-technical-deep-dive.md#71-where-the-suci-travels)). The other diagrams from the
+docs are rendered as `fig8b` to `fig8d` in `results/figures/`.
 
 ### Testbed evidence: Open5GS, UERANSIM and Wireshark/tshark
 

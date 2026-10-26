@@ -5,7 +5,7 @@ PY := $(VENV)/bin/python
 export OQS_INSTALL_PATH := $(CURDIR)/third_party/install/liboqs
 
 .PHONY: help setup build venv keys core-up core-down subscribers test lint bench \
-	experiments figures export-figures all clean-runtime clean-host
+	experiments figures diagrams export-figures all clean-runtime clean-host
 
 help:  ## Show this help
 	@grep -hE '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-16s %s\n", $$1, $$2}'
@@ -53,6 +53,9 @@ experiments:  ## Run all experiments (E1 to E6); needs the core and builds
 
 figures:  ## Make all figures from results/processed
 	$(PY) experiments/make_figures.py
+
+diagrams:  ## Render the Mermaid diagrams in docs/ to PNG and PDF (needs Node.js)
+	scripts/render_mermaid.sh
 
 export-figures:  ## Copy the repository (incl. figures) to the Windows folder (WSL only)
 	scripts/sync_to_windows.sh

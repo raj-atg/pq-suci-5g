@@ -1,0 +1,9 @@
+flowchart TB
+    subgraph UE["UE (UERANSIM, patched)"]
+      USIM["USIM data: pk_HN (1184 B), key id 3, scheme 12"] --> ENC["ML-KEM Encaps + X9.63 + AES-CTR + HMAC"]
+    end
+    ENC -->|"NAS Registration Request (SUCI ~1.1 kB)"| GNB["gNB (unchanged)"]
+    GNB -->|"NGAP InitialUEMessage (N2, SCTP)"| AMF["AMF (patched: accept scheme 12)"]
+    AMF -->|"SBI HTTP/2, SUCI in body"| AUSF["AUSF (unchanged)"]
+    AUSF -->|"SBI HTTP/2, SUCI in URI (~2.2 kB)"| UDM["UDM/SIDF (patched: ML-KEM Decaps)"]
+    UDM -->|"SUPI"| UDR["UDR (unchanged)"]

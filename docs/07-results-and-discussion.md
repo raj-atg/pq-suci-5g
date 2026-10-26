@@ -97,6 +97,13 @@ The sequence diagram (Mermaid) is in [02-suci-explained.md](02-suci-explained.md
 [09-technical-deep-dive.md](09-technical-deep-dive.md#71-where-the-suci-travels). It marks where
 the SUCI is created (UE) and de-concealed (SIDF in the UDM).
 
+![Figure 8](../results/figures/fig8_registration_sequence.png)
+
+The Mermaid diagrams in the docs are also rendered to PNG and PDF by `make diagrams`
+(`scripts/render_mermaid.sh`): `fig8` (this sequence), `fig8b` (changes per network function),
+`fig8c` (core architecture) and `fig8d` (full registration flow, from
+[02](02-suci-explained.md)).
+
 ### Figure 9: what an eavesdropper sees
 
 ![Figure 9](../results/figures/fig9_wireshark_compare.png)

@@ -1,0 +1,24 @@
+sequenceDiagram
+    autonumber
+    participant UE as UE (USIM + ME)
+    participant gNB
+    participant AMF as AMF (serving network)
+    participant AUSF as AUSF (home)
+    participant UDM as UDM + SIDF (home)
+    participant UDR
+    Note over UE: SUCI created here<br/>(conceal with pk_HN)
+    UE->>gNB: RRC Setup Complete [NAS Registration Request with SUCI]
+    gNB->>AMF: NGAP InitialUEMessage over SCTP (N2)
+    AMF->>AUSF: POST /nausf-auth/v1/ue-authentications {supiOrSuci}
+    AUSF->>UDM: POST /nudm-ueau/v1/{suci}/security-information/generate-auth-data
+    Note over UDM: SIDF de-conceals SUCI to SUPI (sk_HN)
+    UDM->>UDR: read authentication subscription (by SUPI)
+    UDR-->>UDM: K, OPc, SQN
+    UDM-->>AUSF: 5G HE AV + SUPI
+    AUSF-->>AMF: 5G SE AV (no SUPI yet)
+    AMF->>UE: Authentication Request (RAND, AUTN)
+    UE->>AMF: Authentication Response (RES*)
+    AMF->>AUSF: confirm RES*
+    AUSF-->>AMF: success + SUPI
+    AMF->>UE: Security Mode Command / Complete
+    AMF->>gNB: InitialContextSetupRequest [Registration Accept]

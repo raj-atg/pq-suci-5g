@@ -47,7 +47,12 @@ Full interpretations: [docs/07-results-and-discussion.md](docs/07-results-and-di
   is about twice that of Profile A with the same number of workers.
 - [Fig. 7, airtime model](results/figures/fig7_airtime.png): the extra 1056 bytes cost 10 slots
   (5 ms) with a 10 PRB QPSK grant, one slot with larger grants.
-- Fig. 8, sequence diagram: Mermaid in [docs/09](docs/09-technical-deep-dive.md#71-where-the-suci-travels).
+- [Fig. 8, sequence diagram](results/figures/fig8_registration_sequence.png): where the SUCI is
+  created (UE) and de-concealed (SIDF in the UDM). Source: Mermaid in
+  [docs/09](docs/09-technical-deep-dive.md#71-where-the-suci-travels). Other diagrams:
+  [fig8b, changes per network function](results/figures/fig8b_pq_changes.png),
+  [fig8c, core architecture](results/figures/fig8c_core_architecture.png),
+  [fig8d, full registration flow](results/figures/fig8d_registration_overview.png).
 - [Fig. 9, wire view](results/figures/fig9_wireshark_compare.png): the null scheme shows the MSIN in
   clear; scheme 12 shows only the 1109-byte concealed identity.
 

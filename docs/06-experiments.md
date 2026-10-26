@@ -205,6 +205,7 @@ E6 also includes the E3 and E4 runs with scheme 12 (the `pq` UE configuration), 
 make setup build keys     # packages, builds (liboqs, Open5GS, UERANSIM, patched copies), test keys
 make experiments          # runs scripts/run_all.sh
 make figures
+make diagrams   # optional: Mermaid diagrams in docs/ to PNG and PDF (needs Node.js)
 ```
 
 `scripts/run_all.sh` starts and stops the core itself and adds the test subscribers (the `make core-up subscribers` steps), so these do not need to be run by hand. It needs `sudo` for the packet capture and the UE tunnel. Keep the machine idle during E1. The E1 to E5 outputs are rewritten on every run; the E3 and E4 raw runs that already succeeded are skipped.

@@ -1,0 +1,13 @@
+flowchart LR
+  UE["UE (UERANSIM nr-ue)"] -- "N1 NAS (via gNB)" --- GNB["gNB (UERANSIM nr-gnb)"]
+  GNB -- "N2 NGAP/SCTP 38412" --> AMF
+  GNB -- "N3 GTP-U" --> UPF
+  subgraph Core["Open5GS 5G core"]
+    AMF --> AUSF --> UDM --> UDR
+    AMF --> SMF
+    SMF -- "N4 PFCP" --> UPF
+    AMF --> PCF
+    AMF --> NSSF
+    NRF["NRF / SCP (SBI, port 7777)"]
+  end
+  UDR --> DB[("MongoDB")]

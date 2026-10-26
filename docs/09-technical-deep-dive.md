@@ -286,7 +286,7 @@ Key points:
 | UDR | subscriber data | none (indexed by SUPI) | no change |
 
 ```mermaid
-flowchart LR
+flowchart TB
     subgraph UE["UE (UERANSIM, patched)"]
       USIM["USIM data: pk_HN (1184 B), key id 3, scheme 12"] --> ENC["ML-KEM Encaps + X9.63 + AES-CTR + HMAC"]
     end

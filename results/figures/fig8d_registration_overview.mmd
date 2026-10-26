@@ -1,0 +1,27 @@
+sequenceDiagram
+  participant UE
+  participant gNB
+  participant AMF
+  participant AUSF
+  participant UDM as UDM (SIDF)
+  participant UDR
+  participant SMF
+  UE->>UE: Create SUCI (conceal SUPI)
+  UE->>gNB: RRC setup with NAS Registration Request (SUCI)
+  gNB->>AMF: NGAP InitialUEMessage (NAS Registration Request, SUCI)
+  AMF->>AUSF: Nausf_UEAuthentication: POST /nausf-auth/v1/ue-authentications (body: supiOrSuci)
+  AUSF->>UDM: Nudm_UEAuthentication: POST /nudm-ueau/v1/{suci}/security-information/generate-auth-data
+  UDM->>UDM: SIDF de-conceals SUCI to SUPI
+  UDM->>UDR: Get authentication subscription
+  UDR-->>UDM: Subscriber keys
+  UDM-->>AUSF: Authentication vector
+  AUSF-->>AMF: 5G-AKA challenge
+  AMF->>UE: NAS Authentication Request (via gNB)
+  UE->>AMF: NAS Authentication Response
+  AMF->>AUSF: Confirm response
+  AUSF-->>AMF: Success, SUPI
+  AMF->>UE: NAS Security Mode Command
+  UE->>AMF: NAS Security Mode Complete
+  AMF->>gNB: NGAP InitialContextSetupRequest (Registration Accept)
+  UE->>AMF: PDU Session Establishment Request
+  AMF->>SMF: Create session
