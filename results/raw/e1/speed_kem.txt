@@ -1,4 +1,4 @@
-# command (per algorithm): ~/pq-suci-5g/third_party/liboqs/build/tests/speed_kem --duration 3 <alg>
+# command (per algorithm): third_party/liboqs/build/tests/speed_kem --duration 3 <alg>
 Configuration info
 ==================
 Target platform:  x86_64-Linux-6.18.54.1-microsoft-standard-WSL2
@@ -14,14 +14,14 @@ OQS build flags:  BUILD_SHARED_LIBS OQS_DIST_BUILD OQS_LIBJADE_BUILD OQS_OPT_TAR
 CPU exts active:  ADX AES AVX AVX2 AVX512 BMI1 BMI2 PCLMULQDQ VPCLMULQDQ POPCNT SSE SSE2 SSE3
 Speed test
 ==========
-Started at 2026-10-26 16:13:14
+Started at 2026-10-26 16:14:44
 Operation                            | Iterations | Total time (s) | Time (us): mean | pop. stdev | CPU cycles: mean          | pop. stdev
 ------------------------------------ | ----------:| --------------:| ---------------:| ----------:| -------------------------:| ----------:
 ML-KEM-512                           |            |                |                 |            |                           |           
-keygen                               |     409519 |          3.000 |           7.326 |     15.673 |                      8676 |      18559
-encaps                               |     346905 |          3.000 |           8.648 |     18.663 |                     10245 |      21982
-decaps                               |     322532 |          3.000 |           9.301 |     17.228 |                     11031 |      20459
-Ended at 2026-10-26 16:13:23
+keygen                               |     425821 |          3.000 |           7.045 |      9.607 |                      8340 |      11404
+encaps                               |     426672 |          3.000 |           7.031 |      5.154 |                      8331 |       6087
+decaps                               |     376166 |          3.000 |           7.975 |      5.113 |                      9457 |       6029
+Ended at 2026-10-26 16:14:53
 Configuration info
 ==================
 Target platform:  x86_64-Linux-6.18.54.1-microsoft-standard-WSL2
@@ -37,14 +37,14 @@ OQS build flags:  BUILD_SHARED_LIBS OQS_DIST_BUILD OQS_LIBJADE_BUILD OQS_OPT_TAR
 CPU exts active:  ADX AES AVX AVX2 AVX512 BMI1 BMI2 PCLMULQDQ VPCLMULQDQ POPCNT SSE SSE2 SSE3
 Speed test
 ==========
-Started at 2026-10-26 16:13:23
+Started at 2026-10-26 16:14:53
 Operation                            | Iterations | Total time (s) | Time (us): mean | pop. stdev | CPU cycles: mean          | pop. stdev
 ------------------------------------ | ----------:| --------------:| ---------------:| ----------:| -------------------------:| ----------:
 ML-KEM-768                           |            |                |                 |            |                           |           
-keygen                               |     254013 |          3.000 |          11.810 |     29.765 |                     13997 |      35218
-encaps                               |     233547 |          3.000 |          12.845 |     33.116 |                     15228 |      39194
-decaps                               |     240546 |          3.000 |          12.472 |     14.721 |                     14809 |      17503
-Ended at 2026-10-26 16:13:32
+keygen                               |     264834 |          3.000 |          11.328 |     34.909 |                     13438 |      41529
+encaps                               |     269944 |          3.000 |          11.113 |      8.061 |                     13187 |       9561
+decaps                               |     234324 |          3.000 |          12.803 |     13.374 |                     15201 |      15893
+Ended at 2026-10-26 16:15:02
 Configuration info
 ==================
 Target platform:  x86_64-Linux-6.18.54.1-microsoft-standard-WSL2
@@ -60,11 +60,11 @@ OQS build flags:  BUILD_SHARED_LIBS OQS_DIST_BUILD OQS_LIBJADE_BUILD OQS_OPT_TAR
 CPU exts active:  ADX AES AVX AVX2 AVX512 BMI1 BMI2 PCLMULQDQ VPCLMULQDQ POPCNT SSE SSE2 SSE3
 Speed test
 ==========
-Started at 2026-10-26 16:13:32
+Started at 2026-10-26 16:15:02
 Operation                            | Iterations | Total time (s) | Time (us): mean | pop. stdev | CPU cycles: mean          | pop. stdev
 ------------------------------------ | ----------:| --------------:| ---------------:| ----------:| -------------------------:| ----------:
 ML-KEM-1024                          |            |                |                 |            |                           |           
-keygen                               |     204819 |          3.000 |          14.647 |     25.610 |                     17374 |      30184
-encaps                               |     160972 |          3.001 |          18.641 |     49.921 |                     22099 |      58979
-decaps                               |     138302 |          3.000 |          21.692 |     39.677 |                     25739 |      46865
-Ended at 2026-10-26 16:13:41
+keygen                               |     244459 |          3.000 |          12.272 |      8.338 |                     14567 |       9888
+encaps                               |     201303 |          3.000 |          14.903 |      9.524 |                     17691 |      11301
+decaps                               |     163175 |          3.000 |          18.385 |     15.433 |                     21838 |      18339
+Ended at 2026-10-26 16:15:11

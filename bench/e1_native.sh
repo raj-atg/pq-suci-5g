@@ -7,7 +7,7 @@ BIN="$ROOT/third_party/liboqs/build/tests/speed_kem"
 RAW="$ROOT/results/raw/e1/speed_kem.txt"
 mkdir -p "$ROOT/results/raw/e1" "$ROOT/results/processed"
 
-echo "# command (per algorithm): $BIN --duration 3 <alg>" >"$RAW"
+echo "# command (per algorithm): ${BIN#"$ROOT"/} --duration 3 <alg>" >"$RAW"
 for alg in ML-KEM-512 ML-KEM-768 ML-KEM-1024; do
   "$BIN" --duration 3 "$alg" | tee -a "$RAW"
 done

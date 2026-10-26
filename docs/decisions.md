@@ -10,7 +10,7 @@ Short entries: context, decision, reason.
   release, so no fallback repository or container was needed.
 
 ## D2. Windows figures folder
-- Decision: `<Windows Documents folder>` (`<Windows Documents folder>`).
+- Decision: a folder under the user's Windows Documents folder.
   The export copies only and never deletes.
 
 ## D3. Publishing
@@ -64,7 +64,7 @@ Short entries: context, decision, reason.
 
 ## D11. Windows copy of the repository (user request, replaces D2 and D9)
 - Context: the user cannot navigate to `\\wsl.localhost\...` and wants the files in
-  `<Windows Documents folder>`.
+  a folder of their choice under Documents.
 - Decision: the working repository stays in the Linux filesystem (fast builds, Linux
   permissions for scripts and hooks). `scripts/sync_to_windows.sh` copies all repository files
   (not builds, not the venv) to the folder in `config/export.env` (not committed); a git

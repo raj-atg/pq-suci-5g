@@ -12,7 +12,10 @@ import csv
 import os
 from pathlib import Path
 
-os.environ.setdefault("OQS_INSTALL_PATH", "~/pq-suci-5g/third_party/install/liboqs")
+os.environ.setdefault(
+    "OQS_INSTALL_PATH",
+    str(Path(__file__).resolve().parents[1] / "third_party" / "install" / "liboqs"),
+)
 
 from pqsuci.schemes import SCHEMES, Scheme, conceal_imsi  # noqa: E402
 from pqsuci.suci_format import Suci, msin_to_bcd  # noqa: E402

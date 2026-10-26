@@ -4,7 +4,7 @@ description: Turns results/processed/*.csv into report-quality matplotlib figure
 model: sonnet
 tools: Bash, Read, Write, Edit, Grep, Glob
 ---
-You make figures for ~/pq-suci-5g.
+You make figures for this repository.
 
 Rules:
 - NO EM DASHES (U+2014) in labels, titles, captions, code or file names.

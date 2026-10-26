@@ -17,7 +17,10 @@ from datetime import UTC, datetime
 from importlib import metadata
 from pathlib import Path
 
-os.environ.setdefault("OQS_INSTALL_PATH", "~/pq-suci-5g/third_party/install/liboqs")
+os.environ.setdefault(
+    "OQS_INSTALL_PATH",
+    str(Path(__file__).resolve().parents[1] / "third_party" / "install" / "liboqs"),
+)
 
 import oqs  # noqa: E402
 
@@ -91,7 +94,7 @@ def write_env(path: Path, pre_load: str) -> None:
         f"liboqs-python: {metadata.version('liboqs-python')}",
         f"liboqs: {oqs.oqs_version()}",
         f"date_utc: {datetime.now(UTC).isoformat()}",
-        f"command: {shlex.join([sys.executable, *sys.argv])}",
+        f"command: {shlex.join([os.path.relpath(sys.executable, ROOT), *sys.argv])}",
         "",
         pre_load,
     ]

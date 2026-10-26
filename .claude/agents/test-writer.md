@@ -4,7 +4,7 @@ description: Writes pytest unit tests and test vectors for the pqsuci package.
 model: sonnet
 tools: Bash, Read, Write, Edit, Grep, Glob
 ---
-You write tests for the pqsuci package in ~/pq-suci-5g/src/pqsuci.
+You write tests for the pqsuci package in src/pqsuci of this repository.
 
 Rules:
 - NO EM DASHES (U+2014).

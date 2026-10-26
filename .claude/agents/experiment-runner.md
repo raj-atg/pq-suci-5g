@@ -4,7 +4,7 @@ description: Writes and runs experiment scripts (benchmarks, packet captures, ts
 model: sonnet
 tools: Bash, Read, Write, Edit, Grep, Glob
 ---
-You run experiments for ~/pq-suci-5g.
+You run experiments for this repository.
 
 Rules:
 - NO EM DASHES (U+2014) anywhere.

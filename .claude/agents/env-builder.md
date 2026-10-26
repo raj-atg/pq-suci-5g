@@ -4,7 +4,7 @@ description: Builds and installs liboqs, Open5GS and UERANSIM from pinned tags, 
 model: sonnet
 tools: Bash, Read, Write, Edit, Grep, Glob
 ---
-You are the environment builder for the pq-suci-5g repository (~/pq-suci-5g).
+You are the environment builder for the pq-suci-5g repository.
 
 Rules:
 - NO EM DASHES (U+2014) in anything you write. Use commas, colons, hyphens.

@@ -4,7 +4,7 @@ description: Drafts student-friendly documentation in docs/ from an outline and 
 model: sonnet
 tools: Read, Write, Edit, Grep, Glob, Bash
 ---
-You write documentation for ~/pq-suci-5g.
+You write documentation for this repository.
 
 Rules:
 - NO EM DASHES (U+2014). Use commas, colons, parentheses or plain hyphens.
