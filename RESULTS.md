@@ -102,3 +102,4 @@ Details: [docs/04-setup.md](docs/04-setup.md) and [docs/06-experiments.md](docs/
 | 6. Results | RQ1 to RQ3 | docs/07, Fig. 1 to 7 and 9 |
 | 7. Discussion and limitations | what a laptop cannot show, lab plan | docs/08 |
 | 8. Related work | prior work | docs/09 section 6 |
+| 9. Real-world deployment | blockers, migration paths, standardization | docs/10 |

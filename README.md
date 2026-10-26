@@ -30,6 +30,28 @@ For the cryptography (elliptic curves, ECIES, the quantum threat, ML-KEM and lat
 work, the 5G message flows, how the architecture is changed to carry a post-quantum SUCI, and
 the findings, read [docs/09-technical-deep-dive.md](docs/09-technical-deep-dive.md).
 
+## Main findings
+
+1. **A real 5G core can register a UE with a post-quantum SUCI.** With ML-KEM-768 (scheme 12) the
+   UE registered on Open5GS, the home network recovered the subscriber identity, and the data
+   session worked.
+2. **The cost is size, not speed.** The concealed identity grows from 45 to 1101 bytes, but
+   ML-KEM-768 was faster than the current elliptic-curve schemes on both the UE and the network
+   side, and registration latency and core CPU under 100 simultaneous UEs were not worse.
+3. **The radio pays for the size.** The extra 1056 bytes cost up to 10 extra uplink slots (5 ms)
+   for a UE with a small grant in our model, about one slot otherwise.
+4. **Open-source 5G software assumed elliptic-curve sizes.** Fixed scheme lists, an 8-bit size
+   variable, a 32-byte key slot and a 69-byte KDF buffer had to be fixed in the UE, the serving
+   AMF and the UDM. Because the Open5GS serving AMF rejects unknown scheme IDs, a home network
+   cannot deploy such a scheme by changing only its own UDM if visited networks behave the same.
+5. **Real-world blockers are SIMs, devices and standards, not cryptography.** A private 5G
+   network that controls its SIMs, devices and core could deploy it now; public networks with
+   roaming need a standardized profile and new SIMs and modems.
+
+Details: results and discussion in [docs/07](docs/07-results-and-discussion.md), real-world
+deployment and blockers in [docs/10](docs/10-real-world-deployment.md), all numbers in
+[results/processed/summary.csv](results/processed/summary.csv).
+
 ## Use cases
 
 - Evaluating the cost of post-quantum identity protection.
@@ -136,6 +158,7 @@ Fig. 8 is the registration sequence diagram in [docs/09](docs/09-technical-deep-
 - [07 Results and discussion](docs/07-results-and-discussion.md)
 - [08 Limitations and lab plan](docs/08-limitations-and-lab.md)
 - [09 Technical deep dive: cryptography, 5G integration, prior work and findings](docs/09-technical-deep-dive.md)
+- [10 Real-world deployment: what blocks it and migration paths](docs/10-real-world-deployment.md)
 - [Glossary](docs/glossary.md)
 - [Decisions](docs/decisions.md)
 - [Versions](docs/versions.md)

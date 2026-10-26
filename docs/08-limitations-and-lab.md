@@ -39,3 +39,6 @@ The goal is to repeat the key measurements with a real gNB, real phones and prog
    - NGAP captures, gNB and core logs, scheduler logs, and the first uplink message size.
    - Timestamps from one synchronized clock for the gNB, the core and the capture host.
    - Failed registrations and retries, not only successful ones.
+
+For what stands in the way of using post-quantum SUCI in real networks (SIMs, devices,
+standards, roaming, radio), see [10-real-world-deployment.md](10-real-world-deployment.md).
