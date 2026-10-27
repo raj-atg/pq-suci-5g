@@ -13,7 +13,6 @@ runtime/
 results/raw/**/*.pcap
 results/raw/**/*.pcapng
 !results/raw/pcap_samples/*.pcap
-config/export.env
 # Keys are generated locally by `make keys` (scripts/gen_test_keys.sh); never committed.
 config/keys/*
 !config/keys/README.md

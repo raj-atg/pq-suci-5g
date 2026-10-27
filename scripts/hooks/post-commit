@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-# After each commit, refresh the optional Windows mirror (does nothing without config/export.env).
-set -euo pipefail
-"$(git rev-parse --show-toplevel)/scripts/sync_to_windows.sh" >/dev/null 2>&1 || true

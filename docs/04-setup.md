@@ -31,7 +31,6 @@ WSL2 notes:
 - The WSL kernel must provide SCTP. If `sudo modprobe sctp` fails, see the SCTP entry under common errors.
 - systemd is not required. `scripts/start_core.sh` starts MongoDB itself.
 - Keep the repository in the Linux filesystem (for example `~/pq-suci-5g`), not under `/mnt/c`. Builds there are slow.
-- To see the files in Windows, use the optional mirror: copy `config/export.env.example` to `config/export.env`, set `WINDOWS_MIRROR_DIR`, and run `make export-figures` (`scripts/sync_to_windows.sh`).
 
 ## Running the core
 
@@ -91,7 +90,7 @@ disappears when WSL restarts.
 | MongoDB repository key fails to download | The key URL is `https://pgp.mongodb.com/server-9.asc` for MongoDB 9.0. `scripts/setup_deps.sh` uses it. |
 | `mongosh` server selection timeout during `open5gs-dbctl` | dbctl uses a 2 second timeout that can expire under load. `scripts/add_subscribers.sh` retries. Run `make subscribers` again if it still fails. |
 | UERANSIM: `homeNetworkPublicKey is too small` with the null scheme | Stock UERANSIM requires a 64-hex-digit key even for scheme 0. `scripts/make_ue_configs.sh` puts the Profile A public key in `ue-null.yaml`. |
-| UE tunnel setup fails: `/etc/iproute2/rt_tables` missing | Ubuntu 26.04 only ships `/usr/share/iproute2/rt_tables`. Run `sudo mkdir -p /etc/iproute2 && sudo cp /usr/share/iproute2/rt_tables /etc/iproute2/` (decision D10 in [decisions.md](decisions.md)). |
+| UE tunnel setup fails: `/etc/iproute2/rt_tables` missing | Ubuntu 26.04 only ships `/usr/share/iproute2/rt_tables`. Run `sudo mkdir -p /etc/iproute2 && sudo cp /usr/share/iproute2/rt_tables /etc/iproute2/` (decision D8 in [decisions.md](decisions.md)). |
 | tshark cannot write the capture file | Run as root, tshark cannot open files in the home directory. `run_registration.sh` writes the capture to stdout and redirects it as your user. |
 | `ping 10.45.0.1` from the normal shell fails or never uses GTP-U | On a single host the UPF owns 10.45.0.1, so the ping is local. Use the UE namespace (`-p`, see above). |
 | `liboqs-python` prints text to stdout on import | `src/pqsuci/_oqs.py` filters it so CLI output stays clean. |
@@ -110,7 +109,7 @@ Recorded during P0 (2026-10-26):
 | Internet | `curl -sI https://github.com` | `HTTP/2 200` |
 | Disk | `df -h ~` | 955 GB free |
 | OS | `/etc/os-release` | Ubuntu 26.04.1 LTS (resolute), kernel 6.18.54.1-microsoft-standard-WSL2 |
-| Init | `ps -p 1 -o comm=` | systemd (not relied on, see decisions D4) |
+| Init | `ps -p 1 -o comm=` | systemd (not relied on, see decisions D3) |
 | Hardware | `nproc`, `free -h`, `lscpu` | 4 vCPU, 3.7 GiB RAM, Intel Core i3-1005G1 @ 1.20 GHz |
 
 MongoDB repository check: `repo.mongodb.org` has an official `resolute` repository for MongoDB

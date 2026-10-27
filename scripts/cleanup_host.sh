@@ -3,7 +3,7 @@
 #   - ip rules UERANSIM adds per UE tunnel ("from 10.45.x.x lookup rt_uesimtunN"); it does not
 #     remove them when nr-ue is stopped
 #   - the UPF tunnel interface ogstun
-#   - /etc/iproute2/ (created for UERANSIM on Ubuntu 26.04, see docs/decisions.md D10), only if
+#   - /etc/iproute2/ (created for UERANSIM on Ubuntu 26.04, see docs/decisions.md D8), only if
 #     it holds nothing beyond the distro default rt_tables and UERANSIM's rt_uesimtun entries
 # Run it after scripts/stop_core.sh.
 set -euo pipefail
