@@ -1,6 +1,6 @@
 # pq-suci-5g
 
-Post-quantum subscriber identity protection (SUCI) for 5G, tested on a real open-source 5G standalone core (Open5GS) with a simulated radio and phone (UERANSIM).
+Post-quantum subscriber identity protection (SUCI) for 5G, tested on OPEN5GS with UERANSIM.
 
 ## What this is
 
